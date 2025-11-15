@@ -70,6 +70,60 @@
             margin-bottom: 8px;
             color: #333;
             font-size: 0.95em;
+            position: relative;
+            cursor: help;
+        }
+        
+        .info-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 16px;
+            font-size: 12px;
+            margin-left: 5px;
+            cursor: help;
+        }
+        
+        .tooltip {
+            visibility: hidden;
+            position: absolute;
+            z-index: 1000;
+            background: #333;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: normal;
+            width: 280px;
+            top: 100%;
+            left: 0;
+            margin-top: 5px;
+            line-height: 1.4;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .control-group label:hover .tooltip {
+            visibility: visible;
+        }
+        
+        .frequency-input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .frequency-input input {
+            width: 80px;
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
         }
         
         .control-group input[type="number"] {
@@ -261,6 +315,43 @@
             height: auto;
         }
         
+        .info-section {
+            background: #f8f9fa;
+            padding: 30px;
+            margin-top: 20px;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+        
+        .info-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .info-section p {
+            margin-bottom: 12px;
+            color: #333;
+        }
+        
+        .info-section ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .info-section li {
+            margin-bottom: 8px;
+        }
+        
+        .info-section a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .info-section a:hover {
+            text-decoration: underline;
+        }
+        
         @media (max-width: 968px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -269,6 +360,10 @@
             .controls {
                 border-right: none;
                 border-bottom: 1px solid #e0e0e0;
+            }
+            
+            .tooltip {
+                width: 220px;
             }
         }
     </style>
@@ -288,16 +383,26 @@
                 </div>
                 
                 <div class="control-group">
-                    <label for="baseRate">Base Rate (1 in X)</label>
-                    <input type="number" id="baseRate" value="10000" min="10" step="10">
+                    <label>
+                        Base Rate (Prevalence)
+                        <span class="info-icon">?</span>
+                        <span class="tooltip">This represents the true occurrence rate (population-level incidence) of the condition/problem being screened. For rare problems, this might be 1 in 10,000 or less.</span>
+                    </label>
+                    <div class="frequency-input">
+                        <span>1 in</span>
+                        <input type="number" id="baseRateFreq" value="10000" min="10" step="10">
+                    </div>
                     <small style="color: #666; display: block; margin-top: 5px;">
                         Prevalence: <span id="prevalenceDisplay">0.01%</span>
                     </small>
                 </div>
                 
                 <div class="control-group">
-                    <label for="accuracy">Test Accuracy (True Positive Rate)
+                    <label>
+                        Test Accuracy (True Positive Rate)
                         <span class="slider-value" id="accuracyValue">75%</span>
+                        <span class="info-icon">?</span>
+                        <span class="tooltip">Also called "sensitivity." This is the probability that the test correctly identifies someone who actually has the condition. Higher accuracy means fewer false negatives (missed cases).</span>
                     </label>
                     <div class="slider-container">
                         <input type="range" id="accuracy" min="50" max="100" value="75" step="1">
@@ -313,8 +418,11 @@
                 </div>
                 
                 <div class="control-group">
-                    <label for="threshold">Detection Threshold (False Positive Rate)
+                    <label>
+                        False Positive Rate
                         <span class="slider-value" id="thresholdValue">50%</span>
+                        <span class="info-icon">?</span>
+                        <span class="tooltip">The probability that the test incorrectly flags someone who does NOT have the condition. This is where the shocking numbers come from - even low false positive rates create huge numbers when screening millions of people.</span>
                     </label>
                     <div class="slider-container">
                         <input type="range" id="threshold" min="1" max="90" value="50" step="1">
@@ -356,8 +464,27 @@
                     </table>
                     
                     <div class="interpretation">
-                        <h3>📊 Plain Language Interpretation</h3>
+                        <h3>📊 Results Summary</h3>
                         <div id="interpretationText"></div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>How This Works</h3>
+                        <p>This tool corrects for <strong>base rate neglect</strong> (also called base rate bias or the base rate fallacy) - a common cognitive bias where people ignore how the prevalence of a problem affects test outcomes.</p>
+                        <p>The simulator applies <strong>Bayes' theorem</strong> to show you four outcome categories instead of just one accuracy number. It displays results in <strong>frequency format</strong> (actual counts of people) rather than percentages, which helps our intuitions work better when reasoning about probabilities.</p>
+                        <p>Even highly accurate tests can produce more false positives than true positives when screening for rare conditions. This has profound implications for mass screening programs in health, security, and education.</p>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Real-World Examples</h3>
+                        <p>Mass screenings for low-prevalence problems appear across many domains:</p>
+                        <ul>
+                            <li><a href="https://nap.nationalacademies.org/read/10420/chapter/2#5" target="_blank">Stephen E. Fienberg (Chair), Committee to Review the Scientific Evidence on the Polygraph, National Research Council, "The Polygraph and Lie Detection" (2003)</a> - Landmark analysis showing why mass polygraph screening of National Lab scientists would harm security rather than help it</li>
+                            <li><a href="https://www.hardingcenter.de/en/transfer-and-impact/fact-boxes/early-detection-of-cancer/early-detection-of-breast-cancer-by-mammography-screening" target="_blank">Harding Center for Risk Literacy, "Early Detection of Breast Cancer by Mammography Screening" (updated April 2021)</a> - Clear presentation of trade-offs in population-wide breast cancer screening</li>
+                            <li><a href="https://www.hardingcenter.de/en/transfer-and-impact/fact-boxes/early-detection-of-cancer/early-detection-of-prostate-cancer-with-psa-testing" target="_blank">Harding Center for Risk Literacy, "Early Detection of Prostate Cancer with PSA Testing" (updated November 2020)</a> - Example of screening trade-offs for Prostate-Specific Antigen testing</li>
+                            <li><a href="https://www.nytimes.com/2022/02/10/learning/lesson-plans/the-misleading-math-of-prenatal-tests.html" target="_blank">Dashiell Young-Saver, "The Misleading Math of Prenatal Tests," New York Times (Feb. 10, 2022)</a> - Analysis of false positives in prenatal genetic screening</li>
+                        </ul>
+                        <p><strong>Important considerations:</strong> These outcome estimates assume the stated accuracy rates are correct. In reality, accuracy may be inflated (tests work better in labs than in the field), false negatives may be deflated (dedicated attackers game the system), and secondary screenings may cause unintended harm.</p>
                     </div>
                 </div>
             </div>
@@ -378,13 +505,14 @@
             document.getElementById('thresholdValue').textContent = e.target.value + '%';
         });
         
-        document.getElementById('baseRate').addEventListener('input', function(e) {
-            const prevalence = (1 / e.target.value * 100).toFixed(4);
+        document.getElementById('baseRateFreq').addEventListener('input', function(e) {
+            const denominator = parseInt(e.target.value);
+            const prevalence = (1 / denominator * 100).toFixed(4);
             document.getElementById('prevalenceDisplay').textContent = prevalence + '%';
         });
         
         function formatNumber(num) {
-            return num.toLocaleString('en-US', { maximumFractionDigits: 1 });
+            return Math.round(num).toLocaleString('en-US');
         }
         
         function drawEulerDiagram(truePositives, falsePositives, falseNegatives, trueNegatives, population) {
@@ -393,80 +521,64 @@
             const width = canvas.width;
             const height = canvas.height;
             
-            // Clear canvas
             ctx.clearRect(0, 0, width, height);
             
-            // Calculate proportions
             const totalFlagged = truePositives + falsePositives;
             const actualProblems = truePositives + falseNegatives;
             
-            // Scale circles based on proportions (square root for area)
             const maxRadius = 140;
             const flaggedRadius = Math.sqrt(totalFlagged / population) * maxRadius + 30;
             const problemsRadius = Math.sqrt(actualProblems / population) * maxRadius + 30;
             
-            // Position circles to show overlap
             const centerY = height / 2;
             const flaggedX = width * 0.35;
             const problemsX = width * 0.65;
-            
-            // Calculate overlap for true positives
             const overlapX = (flaggedX + problemsX) / 2;
             
-            // Draw "Flagged by Test" circle (false positives + true positives)
             ctx.globalAlpha = 0.4;
             ctx.fillStyle = '#ff6b6b';
             ctx.beginPath();
             ctx.arc(flaggedX, centerY, flaggedRadius, 0, 2 * Math.PI);
             ctx.fill();
             
-            // Draw "Actual Problems" circle (true positives + false negatives)
             ctx.fillStyle = '#4ecdc4';
             ctx.beginPath();
             ctx.arc(problemsX, centerY, problemsRadius, 0, 2 * Math.PI);
             ctx.fill();
             
-            // Reset alpha for text
             ctx.globalAlpha = 1;
             ctx.font = 'bold 14px sans-serif';
             ctx.textAlign = 'center';
             
-            // Label: Flagged by Test
             ctx.fillStyle = '#c92a2a';
             ctx.fillText('Flagged by Test', flaggedX, centerY - flaggedRadius - 15);
             ctx.font = '12px sans-serif';
             ctx.fillText(`${formatNumber(totalFlagged)} people`, flaggedX, centerY - flaggedRadius + 2);
             
-            // Label: Actual Problems
             ctx.fillStyle = '#0c8599';
             ctx.fillText('Actual Problems', problemsX, centerY - problemsRadius - 15);
             ctx.font = '12px sans-serif';
             ctx.fillText(`${formatNumber(actualProblems)} people`, problemsX, centerY - problemsRadius + 2);
             
-            // Label sections with counts
             ctx.font = 'bold 16px sans-serif';
             
-            // False Positives (left only)
             ctx.fillStyle = '#c92a2a';
             ctx.fillText('False Positives', flaggedX - 50, centerY - 10);
             ctx.font = '14px sans-serif';
             ctx.fillText(formatNumber(falsePositives), flaggedX - 50, centerY + 10);
             
-            // True Positives (overlap)
             ctx.font = 'bold 16px sans-serif';
             ctx.fillStyle = '#2d6a4f';
             ctx.fillText('True Positives', overlapX, centerY - 10);
             ctx.font = '14px sans-serif';
             ctx.fillText(formatNumber(truePositives), overlapX, centerY + 10);
             
-            // False Negatives (right only)
             ctx.font = 'bold 16px sans-serif';
             ctx.fillStyle = '#0c8599';
             ctx.fillText('False Negatives', problemsX + 50, centerY - 10);
             ctx.font = '14px sans-serif';
             ctx.fillText(formatNumber(falseNegatives), problemsX + 50, centerY + 10);
             
-            // Add legend at bottom
             ctx.textAlign = 'left';
             ctx.font = '11px sans-serif';
             ctx.fillStyle = '#666';
@@ -475,37 +587,30 @@
         }
         
         function generateResults() {
-            // Get inputs
             const population = parseInt(document.getElementById('population').value);
-            const baseRateDenominator = parseInt(document.getElementById('baseRate').value);
+            const baseRateDenominator = parseInt(document.getElementById('baseRateFreq').value);
             const accuracy = parseFloat(document.getElementById('accuracy').value) / 100;
             const falsePositiveRate = parseFloat(document.getElementById('threshold').value) / 100;
             
-            // Calculate base rate (prevalence)
             const baseRate = 1 / baseRateDenominator;
             
-            // Calculate actual numbers in population
             const actualPositives = population * baseRate;
             const actualNegatives = population - actualPositives;
             
-            // Apply test accuracy
-            const truePositives = actualPositives * accuracy; // Correctly identified problems
-            const falseNegatives = actualPositives - truePositives; // Missed problems
+            const truePositives = actualPositives * accuracy;
+            const falseNegatives = actualPositives - truePositives;
             
-            const falsePositives = actualNegatives * falsePositiveRate; // Incorrectly flagged innocents
-            const trueNegatives = actualNegatives - falsePositives; // Correctly cleared innocents
+            const falsePositives = actualNegatives * falsePositiveRate;
+            const trueNegatives = actualNegatives - falsePositives;
             
-            // Total flagged and not flagged
             const totalFlagged = truePositives + falsePositives;
             const totalNotFlagged = falseNegatives + trueNegatives;
             
-            // Probabilities for interpretation
             const probFlaggedIsInnocent = (falsePositives / totalFlagged) * 100;
             const probBenignFlagged = (falsePositives / population) * 100;
             const probProblemMissed = (falseNegatives / actualPositives) * 100;
             const falsePositivesPerTruePositive = falsePositives / truePositives;
             
-            // Build table
             const tableBody = document.getElementById('tableBody');
             tableBody.innerHTML = `
                 <tr>
@@ -528,7 +633,6 @@
                 </tr>
             `;
             
-            // Build interpretation
             const interpretationText = document.getElementById('interpretationText');
             interpretationText.innerHTML = `
                 <p>Assuming a base rate of <span class="stat-highlight">1 in ${formatNumber(baseRateDenominator)}</span> (${(baseRate * 100).toFixed(4)}% prevalence), 
@@ -539,23 +643,24 @@
                 <p><strong>${formatNumber(falsePositives)}</strong> false positives (innocent cases flagged)</p>
                 
                 <p>There's a <span class="stat-highlight">${probFlaggedIsInnocent.toFixed(2)}%</span> probability 
+                (<span class="stat-highlight">${formatNumber(falsePositives)}/${formatNumber(totalFlagged)}</span>) 
                 that a case flagged as concerning would actually be innocent.</p>
                 
                 <p>There's a <span class="stat-highlight">${probBenignFlagged.toFixed(2)}%</span> chance 
+                (<span class="stat-highlight">${formatNumber(falsePositives)}/${formatNumber(population)}</span>) 
                 that a benign case would get flagged.</p>
                 
                 <p>Yet <span class="stat-highlight">${probProblemMissed.toFixed(1)}%</span> of the time, 
                 real problems would evade detection (false negatives).</p>
                 
                 <p>Meanwhile, there would be approximately <span class="stat-highlight">${formatNumber(falsePositivesPerTruePositive)}</span> 
-                people mistakenly flagged for each real problem found.</p>
+                people mistakenly flagged for each real problem found 
+                (<span class="stat-highlight">${formatNumber(falsePositives)} false positives / ${formatNumber(truePositives)} true positives</span>).</p>
             `;
             
-            // Show results
             document.getElementById('placeholder').style.display = 'none';
             document.getElementById('resultsContent').classList.add('show');
             
-            // Draw Euler diagram
             drawEulerDiagram(truePositives, falsePositives, falseNegatives, trueNegatives, population);
         }
     </script>
