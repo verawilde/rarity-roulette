@@ -430,10 +430,10 @@
                 
                 <div class="control-group">
                     <label>
-                        False Positive Rate
+                        Detection Threshold
                         <span class="slider-value" id="thresholdValue">50%</span>
                         <span class="info-icon">?</span>
-                        <span class="tooltip">The probability that the test incorrectly flags someone who does NOT have the condition. This is where the shocking numbers come from - even low false positive rates create huge numbers when screening millions of people.</span>
+                        <span class="tooltip">The test's capacity to detect the signal at a particular performance level. This determines the false positive rate - how many without the signal get incorrectly flagged.</span>
                     </label>
                     <div class="slider-container">
                         <input type="range" id="threshold" min="1" max="90" value="50" step="1">
@@ -661,10 +661,10 @@
             ctx.font = '13px sans-serif';
             ctx.fillStyle = '#666';
             ctx.fillText(formatNumber(actualProblems) + ' total', baddiesX, centerY + baddiesRadius + 20);
-            ctx.fillText(formatNumber(truePositives) + ' fail test', baddiesX, centerY + baddiesRadius + 38);
+            ctx.fillText(formatNumber(truePositives) + ' fail', baddiesX, centerY + baddiesRadius + 38);
             
             ctx.fillText(formatNumber(actualInnocents) + ' total', innocentsX, centerY + innocentsRadius + 20);
-            ctx.fillText(formatNumber(falsePositives) + ' fail test', innocentsX, centerY + innocentsRadius + 38);
+            ctx.fillText(formatNumber(falsePositives) + ' fail', innocentsX, centerY + innocentsRadius + 38);
             
             // Bottom note
             ctx.textAlign = 'center';
