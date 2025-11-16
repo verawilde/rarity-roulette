@@ -522,6 +522,54 @@
             document.getElementById('prevalenceDisplay').textContent = prevalence + '%';
         });
         
+        function loadScenario() {
+            const scenario = document.getElementById('scenario').value;
+            
+            const scenarios = {
+                polygraph: {
+                    population: 10000,
+                    baseRate: 10000,
+                    accuracy: 80,
+                    falsePositiveRate: 10
+                },
+                mammography: {
+                    population: 1000,
+                    baseRate: 200,
+                    accuracy: 90,
+                    falsePositiveRate: 7
+                },
+                psa: {
+                    population: 1000,
+                    baseRate: 40,
+                    accuracy: 85,
+                    falsePositiveRate: 15
+                },
+                prenatal: {
+                    population: 80000,
+                    baseRate: 4000,
+                    accuracy: 75,
+                    falsePositiveRate: 0.5
+                }
+            };
+            
+            if (scenario && scenarios[scenario]) {
+                const s = scenarios[scenario];
+                document.getElementById('population').value = s.population;
+                document.getElementById('baseRateFreq').value = s.baseRate;
+                document.getElementById('accuracy').value = s.accuracy;
+                document.getElementById('threshold').value = s.falsePositiveRate;
+                
+                // Update displays
+                document.getElementById('accuracyValue').textContent = s.accuracy + '%';
+                document.getElementById('thresholdValue').textContent = s.falsePositiveRate + '%';
+                const prevalence = (1 / s.baseRate * 100).toFixed(4);
+                document.getElementById('prevalenceDisplay').textContent = prevalence + '%';
+                
+                // Auto-generate results
+                generateResults();
+            }
+        }
+        
         function formatNumber(num) {
             return Math.round(num).toLocaleString('en-US');
         }
@@ -619,10 +667,11 @@
             ctx.fillText(formatNumber(falsePositives) + ' fail test', innocentsX, centerY + innocentsRadius + 38);
             
             // Bottom note
-            ctx.textAlign = 'left';
-            ctx.font = '11px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.font = '12px sans-serif';
             ctx.fillStyle = '#666';
-            ctx.fillText(`The shocking reality: ${formatNumber(falsePositives)} innocents fail for every ${formatNumber(truePositives)} baddies caught`, 20, height - 15);
+            const ratio = Math.round(falsePositives / truePositives);
+            ctx.fillText(`${formatNumber(falsePositives)} innocents fail for every ${formatNumber(truePositives)} with signal`, width / 2, height - 15);
         }
         
         function generateResults() {
