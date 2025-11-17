@@ -514,13 +514,29 @@
     </footer>
     
     <script>
-        // Update slider displays
+        // Update slider displays and sync with input boxes
         document.getElementById('accuracy').addEventListener('input', function(e) {
-            document.getElementById('accuracyValue').textContent = e.target.value + '%';
+            const value = e.target.value;
+            document.getElementById('accuracyValue').textContent = value + '%';
+            document.getElementById('accuracyInput').value = value;
+        });
+        
+        document.getElementById('accuracyInput').addEventListener('input', function(e) {
+            const value = Math.min(100, Math.max(50, parseInt(e.target.value) || 50));
+            document.getElementById('accuracy').value = value;
+            document.getElementById('accuracyValue').textContent = value + '%';
         });
         
         document.getElementById('threshold').addEventListener('input', function(e) {
-            document.getElementById('thresholdValue').textContent = e.target.value + '%';
+            const value = e.target.value;
+            document.getElementById('thresholdValue').textContent = value + '%';
+            document.getElementById('thresholdInput').value = value;
+        });
+        
+        document.getElementById('thresholdInput').addEventListener('input', function(e) {
+            const value = Math.min(90, Math.max(1, parseFloat(e.target.value) || 1));
+            document.getElementById('threshold').value = value;
+            document.getElementById('thresholdValue').textContent = value + '%';
         });
         
         document.getElementById('baseRateFreq').addEventListener('input', function(e) {
@@ -570,7 +586,9 @@
                 document.getElementById('population').value = s.population;
                 document.getElementById('baseRateFreq').value = s.baseRate;
                 document.getElementById('accuracy').value = s.accuracy;
+                document.getElementById('accuracyInput').value = s.accuracy;
                 document.getElementById('threshold').value = s.falsePositiveRate;
+                document.getElementById('thresholdInput').value = s.falsePositiveRate;
                 
                 // Update displays
                 document.getElementById('accuracyValue').textContent = s.accuracy + '%';
