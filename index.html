@@ -418,17 +418,17 @@
                     </label>
                     <div style="display: flex; gap: 10px; align-items: center;">
                         <div class="slider-container" style="flex: 1;">
-                            <input type="range" id="accuracy" min="50" max="100" value="75" step="1">
+                            <input type="range" id="accuracy" min="1" max="100" value="75" step="1">
                             <div class="slider-marks">
-                                <span>50%</span>
+                                <span>1%</span>
+                                <span>20%</span>
+                                <span>40%</span>
                                 <span>60%</span>
-                                <span>70%</span>
                                 <span>80%</span>
-                                <span>90%</span>
                                 <span>100%</span>
                             </div>
                         </div>
-                        <input type="number" id="accuracyInput" value="75" min="50" max="100" step="1" style="width: 60px; padding: 8px; border: 2px solid #ddd; border-radius: 6px; font-size: 0.95em;">
+                        <input type="number" id="accuracyInput" value="75" min="1" max="100" step="1" style="width: 60px; padding: 8px; border: 2px solid #ddd; border-radius: 6px; font-size: 0.95em;">
                     </div>
                 </div>
                 
@@ -518,7 +518,7 @@
         });
         
         document.getElementById('accuracyInput').addEventListener('input', function(e) {
-            const value = Math.min(100, Math.max(50, parseInt(e.target.value) || 50));
+            const value = Math.min(100, Math.max(1, parseInt(e.target.value) || 1));
             document.getElementById('accuracy').value = value;
             document.getElementById('accuracyValue').textContent = value + '%';
         });
