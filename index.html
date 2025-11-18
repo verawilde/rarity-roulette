@@ -754,23 +754,23 @@
                 <p>Assuming a base rate of <span class="stat-highlight">1 in ${formatNumber(baseRateDenominator)}</span> (${(baseRate * 100).toFixed(4)}% prevalence), 
                 a <span class="stat-highlight">${(falsePositiveRate * 100).toFixed(2)}%</span> false positive rate, 
                 and a <span class="stat-highlight">${(accuracy * 100).toFixed(0)}%</span> true positive rate, 
-                screening <span class="stat-highlight">${formatNumber(population)}</span> people would generate:</p>
+                screening <span class="stat-highlight">${formatNumber(population)}</span> people would be expected to generate:</p>
                 
                 <p><strong>${formatNumber(falsePositives)}</strong> false positives (innocent cases flagged)</p>
                 
-                <p>There's a <span class="stat-highlight">${probFlaggedIsInnocent.toFixed(2)}%</span> probability 
+                <p>A case flagged as concerning would have a <span class="stat-highlight">${probFlaggedIsInnocent.toFixed(2)}%</span> probability 
                 (<span class="stat-highlight">${formatNumber(falsePositives)}/${formatNumber(totalFlagged)}</span>) 
-                that a case flagged as concerning would actually be innocent.</p>
+                of actually being innocent.</p>
                 
-                <p>There's a <span class="stat-highlight">${probBenignFlagged.toFixed(2)}%</span> chance 
+                <p>A benign case would have a <span class="stat-highlight">${probBenignFlagged.toFixed(2)}%</span> chance 
                 (<span class="stat-highlight">${formatNumber(falsePositives)}/${formatNumber(population)}</span>) 
-                that a benign case would get flagged.</p>
+                of being flagged.</p>
                 
-                <p>Yet <span class="stat-highlight">${probProblemMissed.toFixed(1)}%</span> of the time, 
-                real problems would evade detection (false negatives).</p>
+                <p>Yet <span class="stat-highlight">${probProblemMissed.toFixed(1)}%</span> of real problems 
+                would be expected to evade detection (false negatives).</p>
                 
-                <p>Meanwhile, there would be approximately <span class="stat-highlight">${formatNumber(falsePositivesPerTruePositive)}</span> 
-                people mistakenly flagged for each real problem found 
+                <p>Meanwhile, approximately <span class="stat-highlight">${formatNumber(falsePositivesPerTruePositive)}</span> 
+                people would be expected to be mistakenly flagged for each real problem found 
                 (<span class="stat-highlight">${formatNumber(falsePositives)} false positives / ${formatNumber(truePositives)} true positives</span>).</p>
             `;
             
