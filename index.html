@@ -329,6 +329,13 @@
             font-size: 1.3em;
         }
         
+        .info-section h4 {
+            color: #555;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+        
         .info-section p {
             margin-bottom: 12px;
             color: #333;
@@ -501,7 +508,35 @@
                             <li><a href="https://www.nytimes.com/2022/02/10/learning/lesson-plans/the-misleading-math-of-prenatal-tests.html" target="_blank">Dashiell Young-Saver, "The Misleading Math of Prenatal Tests," New York Times (Feb. 10, 2022)</a> - Analysis of false positives in prenatal genetic screening</li>
                         </ul>
                         <p><strong>Note:</strong> The mammography and PSA examples use parameters extrapolated from the Harding Center's long-term screening data to match their published false-alarm rates. The Harding fact boxes provide more comprehensive outcomes (e.g., mortality, overdiagnosis, quality-of-life effects), whereas this tool focuses solely on test-classification accuracy. The purpose is illustrative, not a substitute for full cohort data.</p>
-                        <p><strong>Important considerations:</strong> These outcome estimates assume the stated accuracy rates are correct and precisely known. In reality, accuracy may be inflated (tests work better in labs than in the field), test accuracy parameters themselves have uncertainty (see <a href="https://sites.stat.columbia.edu/gelman/research/published/specificity.pdf" target="_blank">Gelman & Carpenter, 2020</a>), false negatives may be deflated (dedicated attackers game the system), and secondary screenings may cause unintended harm. Additionally, test performance may vary across subgroups, and detection thresholds for continuous biomarkers are often set arbitrarily. This tool calculates hypothetical effect estimates for screenings of this structure along only one causal pathway of four — the classification pathway. It does not compute net effects, accounting for test classification, strategy, information, and <a href="https://wildetruth.substack.com/p/resource-reallocation" target="_blank">resource reallocation</a>.</p>
+                        
+                        <p><strong>Important considerations:</strong> These outcome estimates assume the stated accuracy rates are correct and precisely known. In practice, several factors may distort these estimates:</p>
+                        
+                        <h4>Why accuracy may be inflated:</h4>
+                        <ul>
+                            <li>Tests often perform better in controlled lab settings than in real-world field conditions</li>
+                            <li>Accuracy parameters themselves carry uncertainty (see <a href="https://sites.stat.columbia.edu/gelman/research/published/specificity.pdf" target="_blank">Gelman & Carpenter, 2020</a>)</li>
+                            <li>Researchers and tool developers have financial and professional incentives to report favorable results</li>
+                        </ul>
+                        
+                        <h4>Why error rates may be misleading:</h4>
+                        <ul>
+                            <li>False negatives may be underestimated when dedicated adversaries actively game the system (e.g., espionage, fraud)</li>
+                            <li>Detection thresholds for continuous biomarkers are often set arbitrarily</li>
+                            <li>Test performance may vary substantially across demographic subgroups</li>
+                        </ul>
+                        
+                        <h4>Hidden costs of false positives:</h4>
+                        <ul>
+                            <li>Secondary screenings may cause unintended harm (e.g., elevated mortality risks from unnecessary radiation/other treatment, chronic pain from unnecessary biopsy or mastectomy, psychological distress, and job loss)</li>
+                            <li>Those who benefit financially from follow-up testing often set screening guidelines</li>
+                            <li>Individuals flagged incorrectly bear costs while having no actual condition</li>
+                        </ul>
+                        
+                        <h4>What this tool doesn't capture:</h4>
+                        <ul>
+                            <li>This calculates hypothetical estimates along only one causal pathway — the classification pathway</li>
+                            <li>It does not compute net effects accounting for test classification, strategy, information, and <a href="https://wildetruth.substack.com/p/resource-reallocation" target="_blank">resource reallocation</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
