@@ -643,106 +643,6 @@
             return Math.round(num).toLocaleString('en-US');
         }
         
-        function drawEulerDiagram(truePositives, falsePositives, falseNegatives, trueNegatives, population) {
-            const canvas = document.getElementById('eulerCanvas');
-            const ctx = canvas.getContext('2d');
-            const width = canvas.width;
-            const height = canvas.height;
-            
-            ctx.clearRect(0, 0, width, height);
-            
-            const actualProblems = truePositives + falseNegatives;
-            const actualInnocents = falsePositives + trueNegatives;
-            
-            // Scale circles based on actual proportions
-            const maxRadius = 100;
-            const baddiesRadius = Math.max(Math.sqrt(actualProblems / population) * maxRadius * 3, 40);
-            const innocentsRadius = Math.sqrt(actualInnocents / population) * maxRadius * 1.5 + 45;
-            
-            const centerY = height / 2;
-            const baddiesX = width * 0.28;
-            const innocentsX = width * 0.72;
-            
-            // Helper function to draw stipple pattern
-            function drawStipple(x, y, radius, density, failProportion) {
-                const failHeight = radius * 2 * failProportion;
-                const numDots = Math.floor(radius * radius * density);
-                
-                for (let i = 0; i < numDots; i++) {
-                    const angle = Math.random() * Math.PI * 2;
-                    const r = Math.sqrt(Math.random()) * radius;
-                    const dotX = x + r * Math.cos(angle);
-                    const dotY = y + r * Math.sin(angle);
-                    
-                    // Check if within circle
-                    const dist = Math.sqrt((dotX - x) ** 2 + (dotY - y) ** 2);
-                    if (dist <= radius) {
-                        // Determine if this dot is in "Fail" zone (top portion)
-                        const isInFailZone = (dotY - y) < (-radius + failHeight);
-                        ctx.fillStyle = isInFailZone ? '#d32f2f' : '#333';
-                        ctx.beginPath();
-                        ctx.arc(dotX, dotY, 2, 0, 2 * Math.PI);
-                        ctx.fill();
-                    }
-                }
-            }
-            
-            // Draw Baddies circle (left, smaller, red outline)
-            ctx.strokeStyle = '#d32f2f';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.arc(baddiesX, centerY, baddiesRadius, 0, 2 * Math.PI);
-            ctx.stroke();
-            
-            // Draw Innocents circle (right, larger, blue outline)
-            ctx.strokeStyle = '#1976d2';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.arc(innocentsX, centerY, innocentsRadius, 0, 2 * Math.PI);
-            ctx.stroke();
-            
-            // Calculate fail proportions
-            const baddiesFailProp = actualProblems > 0 ? truePositives / actualProblems : 0;
-            const innocentsFailProp = actualInnocents > 0 ? falsePositives / actualInnocents : 0;
-            
-            // Draw stipple patterns
-            drawStipple(baddiesX, centerY, baddiesRadius - 5, 0.015, baddiesFailProp);
-            drawStipple(innocentsX, centerY, innocentsRadius - 5, 0.008, innocentsFailProp);
-            
-            // Labels
-            ctx.textAlign = 'center';
-            ctx.font = 'bold 18px sans-serif';
-            
-            // "Fail" labels above circles
-            ctx.fillStyle = '#000';
-            ctx.fillText('Fail', baddiesX, centerY - baddiesRadius - 35);
-            ctx.fillText('Fail', innocentsX, centerY - innocentsRadius - 35);
-            
-            // Circle labels
-            ctx.font = 'bold 16px sans-serif';
-            ctx.fillStyle = '#d32f2f';
-            ctx.fillText('Signal', baddiesX, centerY - baddiesRadius - 15);
-            
-            ctx.fillStyle = '#1976d2';
-            ctx.fillText('No Signal', innocentsX, centerY - innocentsRadius - 15);
-            
-            // Count labels below circles
-            ctx.font = '13px sans-serif';
-            ctx.fillStyle = '#666';
-            ctx.fillText(formatNumber(actualProblems) + ' total', baddiesX, centerY + baddiesRadius + 20);
-            ctx.fillText(formatNumber(truePositives) + ' fail', baddiesX, centerY + baddiesRadius + 38);
-            
-            ctx.fillText(formatNumber(actualInnocents) + ' total', innocentsX, centerY + innocentsRadius + 20);
-            ctx.fillText(formatNumber(falsePositives) + ' fail', innocentsX, centerY + innocentsRadius + 38);
-            
-            // Bottom note
-            ctx.textAlign = 'center';
-            ctx.font = '12px sans-serif';
-            ctx.fillStyle = '#666';
-            const ratio = Math.round(falsePositives / truePositives);
-            ctx.fillText(`${formatNumber(falsePositives)} innocents fail for every ${formatNumber(truePositives)} with signal`, width / 2, height - 15);
-        }
-        
         function generateResults() {
             const population = parseInt(document.getElementById('population').value);
             const baseRateDenominator = parseInt(document.getElementById('baseRateFreq').value);
@@ -817,8 +717,6 @@
             
             document.getElementById('placeholder').style.display = 'none';
             document.getElementById('resultsContent').classList.add('show');
-            
-            drawEulerDiagram(truePositives, falsePositives, falseNegatives, trueNegatives, population);
         }
     </script>
 </body>
