@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rarity Roulette</title>
+    <link rel="icon" type="image/png" href="favicon.png">
     <style>
         * {
             margin: 0;
@@ -34,9 +35,11 @@
             text-align: center;
         }
         
-        header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+        .header-logo {
+            max-width: 300px;
+            height: auto;
+            display: block;
+            margin: 0 auto 15px auto;
         }
         
         header p {
@@ -378,7 +381,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>Rarity Roulette</h1>
+            <img src="rarity_roulette_logo.png" alt="Rarity Roulette" class="header-logo">
             <p>This simulator estimates outcomes of mass screenings for low-prevalence problems to help people correct for base rate bias. When something is very rare, even in a highly accurate mass screening, the common (false positives) overwhelms the rare (true positives). When secondary screening cannot sort false from true positives without substantial costs and with high certainty, these programs may cause massive, preventable societal harm.</p>
             <p style="margin-top: 15px;"><a href="https://wildetruth.substack.com/p/rarity-roulette" target="_blank" style="color: white; text-decoration: underline; font-weight: 600;">Read the full explanation and context →</a></p>
         </header>
