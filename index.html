@@ -14,7 +14,7 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #1e2235;
             min-height: 100vh;
             padding: 20px;
         }
@@ -22,17 +22,18 @@
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            background: white;
+            background: #282d42;
             border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
             overflow: hidden;
         }
         
         header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #1e2235;
             color: white;
             padding: 30px;
             text-align: center;
+            border-bottom: 1px solid #3a4055;
         }
         
         .header-logo {
@@ -44,10 +45,11 @@
         
         header p {
             font-size: 1.1em;
-            opacity: 0.95;
+            opacity: 0.9;
             line-height: 1.6;
             max-width: 900px;
             margin: 0 auto;
+            color: #b8bcc8;
         }
         
         .main-content {
@@ -58,9 +60,9 @@
         }
         
         .controls {
-            background: #f8f9fa;
+            background: #2d324a;
             padding: 30px;
-            border-right: 1px solid #e0e0e0;
+            border-right: 1px solid #3a4055;
         }
         
         .control-group {
@@ -71,7 +73,7 @@
             display: block;
             font-weight: 600;
             margin-bottom: 8px;
-            color: #333;
+            color: #e8e9ed;
             font-size: 0.95em;
             position: relative;
             cursor: help;
@@ -81,7 +83,7 @@
             display: inline-block;
             width: 16px;
             height: 16px;
-            background: #667eea;
+            background: #f56476;
             color: white;
             border-radius: 50%;
             text-align: center;
@@ -95,8 +97,8 @@
             visibility: hidden;
             position: absolute;
             z-index: 1000;
-            background: #333;
-            color: white;
+            background: #1e2235;
+            color: #e8e9ed;
             padding: 10px;
             border-radius: 6px;
             font-size: 0.85em;
@@ -106,7 +108,8 @@
             left: 0;
             margin-top: 5px;
             line-height: 1.4;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            border: 1px solid #3a4055;
         }
         
         .control-group label:hover .tooltip {
@@ -119,28 +122,32 @@
             gap: 8px;
             margin-top: 8px;
             font-size: 0.9em;
-            color: #666;
+            color: #b8bcc8;
         }
         
         .frequency-input input {
             width: 80px;
             padding: 6px;
-            border: 1px solid #ddd;
+            border: 1px solid #3a4055;
             border-radius: 4px;
+            background: #1e2235;
+            color: #e8e9ed;
         }
         
         .control-group input[type="number"] {
             width: 100%;
             padding: 10px;
-            border: 2px solid #ddd;
+            border: 2px solid #3a4055;
             border-radius: 6px;
             font-size: 1em;
             transition: border-color 0.3s;
+            background: #1e2235;
+            color: #e8e9ed;
         }
         
         .control-group input[type="number"]:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #f56476;
         }
         
         .slider-container {
@@ -150,7 +157,7 @@
         .slider-container input[type="range"] {
             width: 100%;
             height: 6px;
-            background: #ddd;
+            background: #3a4055;
             border-radius: 3px;
             outline: none;
             -webkit-appearance: none;
@@ -160,7 +167,7 @@
             display: flex;
             justify-content: space-between;
             font-size: 0.75em;
-            color: #666;
+            color: #8a8f9f;
             margin-top: 5px;
             padding: 0 2px;
         }
@@ -170,7 +177,7 @@
             appearance: none;
             width: 18px;
             height: 18px;
-            background: #667eea;
+            background: #f56476;
             cursor: pointer;
             border-radius: 50%;
         }
@@ -178,7 +185,7 @@
         .slider-container input[type="range"]::-moz-range-thumb {
             width: 18px;
             height: 18px;
-            background: #667eea;
+            background: #f56476;
             cursor: pointer;
             border-radius: 50%;
             border: none;
@@ -186,7 +193,7 @@
         
         .slider-value {
             display: inline-block;
-            background: #667eea;
+            background: #f56476;
             color: white;
             padding: 4px 12px;
             border-radius: 12px;
@@ -195,22 +202,39 @@
             margin-left: 10px;
         }
         
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #3a4055;
+            border-radius: 6px;
+            font-size: 1em;
+            background: #1e2235;
+            color: #e8e9ed;
+            cursor: pointer;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: #f56476;
+        }
+        
         button {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f56476;
             color: white;
             border: none;
             border-radius: 6px;
             font-size: 1.1em;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
         }
         
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 12px rgba(245, 100, 118, 0.4);
+            background: #ff7a8a;
         }
         
         button:active {
@@ -219,6 +243,7 @@
         
         .results {
             padding: 30px;
+            background: #282d42;
         }
         
         .results-placeholder {
@@ -226,7 +251,7 @@
             align-items: center;
             justify-content: center;
             height: 100%;
-            color: #999;
+            color: #8a8f9f;
             font-size: 1.2em;
             text-align: center;
         }
@@ -243,17 +268,19 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 30px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            border-radius: 8px;
+            overflow: hidden;
         }
         
         th, td {
             padding: 15px;
             text-align: right;
-            border: 1px solid #ddd;
+            border: 1px solid #3a4055;
         }
         
         th {
-            background: #667eea;
+            background: #f56476;
             color: white;
             font-weight: 600;
         }
@@ -263,18 +290,24 @@
             font-weight: 600;
         }
         
-        tr:nth-child(even) {
-            background: #f8f9fa;
+        td {
+            background: #2d324a;
+            color: #e8e9ed;
         }
         
-        .total-row {
-            background: #e8eaf6 !important;
+        tr:nth-child(even) td {
+            background: #323850;
+        }
+        
+        .total-row td {
+            background: #3a4055 !important;
             font-weight: 700;
+            color: #f56476;
         }
         
         .interpretation {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
+            background: #3a2a2d;
+            border-left: 4px solid #f56476;
             padding: 20px;
             border-radius: 6px;
             line-height: 1.8;
@@ -284,18 +317,19 @@
         }
         
         .interpretation h3 {
-            color: #856404;
+            color: #f56476;
             margin-bottom: 15px;
             font-size: 1.3em;
         }
         
         .interpretation p {
-            color: #856404;
+            color: #e8e9ed;
             margin-bottom: 12px;
         }
         
         .stat-highlight {
-            background: #ffc107;
+            background: #f56476;
+            color: white;
             padding: 2px 6px;
             border-radius: 3px;
             font-weight: 700;
@@ -304,11 +338,11 @@
         }
         
         .visual-container {
-            background: white;
+            background: #2d324a;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 30px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
         
         #eulerCanvas {
@@ -319,21 +353,22 @@
         }
         
         .info-section {
-            background: #f8f9fa;
+            background: #2d324a;
             padding: 30px;
             margin-top: 20px;
             border-radius: 8px;
             line-height: 1.6;
+            border: 1px solid #3a4055;
         }
         
         .info-section h3 {
-            color: #667eea;
+            color: #f56476;
             margin-bottom: 15px;
             font-size: 1.3em;
         }
         
         .info-section h4 {
-            color: #555;
+            color: #e8e9ed;
             margin-top: 15px;
             margin-bottom: 10px;
             font-size: 1.05em;
@@ -341,7 +376,7 @@
         
         .info-section p {
             margin-bottom: 12px;
-            color: #333;
+            color: #b8bcc8;
         }
         
         .info-section ul {
@@ -351,15 +386,40 @@
         
         .info-section li {
             margin-bottom: 8px;
+            color: #b8bcc8;
         }
         
         .info-section a {
-            color: #667eea;
+            color: #f56476;
             text-decoration: none;
         }
         
         .info-section a:hover {
             text-decoration: underline;
+            color: #ff7a8a;
+        }
+        
+        .info-section strong {
+            color: #e8e9ed;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #8a8f9f;
+            font-size: 0.9em;
+            border-top: 1px solid #3a4055;
+            background: #1e2235;
+        }
+        
+        footer a {
+            color: #f56476;
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+            color: #ff7a8a;
         }
         
         @media (max-width: 968px) {
@@ -369,7 +429,7 @@
             
             .controls {
                 border-right: none;
-                border-bottom: 1px solid #e0e0e0;
+                border-bottom: 1px solid #3a4055;
             }
             
             .tooltip {
@@ -383,14 +443,14 @@
         <header>
             <img src="rarity_roulette_logo.png" alt="Rarity Roulette" class="header-logo">
             <p>This simulator estimates outcomes of mass screenings for low-prevalence problems to help people correct for base rate bias. When something is very rare, even in a highly accurate mass screening, the common (false positives) overwhelms the rare (true positives). When secondary screening cannot sort false from true positives without substantial costs and with high certainty, these programs may cause massive, preventable societal harm.</p>
-            <p style="margin-top: 15px;"><a href="https://wildetruth.substack.com/p/rarity-roulette" target="_blank" style="color: white; text-decoration: underline; font-weight: 600;">Read the full explanation and context →</a></p>
+            <p style="margin-top: 15px;"><a href="https://wildetruth.substack.com/p/rarity-roulette" target="_blank" style="color: #f56476; text-decoration: underline; font-weight: 600;">Read the full explanation and context →</a></p>
         </header>
         
         <div class="main-content">
             <div class="controls">
                 <div class="control-group">
                     <label for="scenario">Try a Real-World Example</label>
-                    <select id="scenario" onchange="loadScenario()" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 1em; background: white; cursor: pointer;">
+                    <select id="scenario" onchange="loadScenario()">
                         <option value="">-- Select a scenario --</option>
                         <option value="polygraph_suspicious">Fienberg/NAS, Polygraph - Suspicious Mode (2003)</option>
                         <option value="polygraph_friendly">Fienberg/NAS, Polygraph - Friendly Mode (2003)</option>
@@ -415,7 +475,7 @@
                         <span style="margin-right: 8px;">1 in</span>
                         <input type="number" id="baseRateFreq" value="10000" min="10" step="10" style="flex: 1;">
                     </div>
-                    <small style="color: #666; display: block; margin-top: 5px;">
+                    <small style="color: #8a8f9f; display: block; margin-top: 5px;">
                         Prevalence: <span id="prevalenceDisplay">0.01%</span>
                     </small>
                 </div>
@@ -439,7 +499,7 @@
                                 <span>100%</span>
                             </div>
                         </div>
-                        <input type="number" id="accuracyInput" value="75" min="1" max="100" step="1" style="width: 60px; padding: 8px; border: 2px solid #ddd; border-radius: 6px; font-size: 0.95em;">
+                        <input type="number" id="accuracyInput" value="75" min="1" max="100" step="1" style="width: 60px; padding: 8px; border: 2px solid #3a4055; border-radius: 6px; font-size: 0.95em; background: #1e2235; color: #e8e9ed;">
                     </div>
                 </div>
                 
@@ -462,7 +522,7 @@
                                 <span>90%</span>
                             </div>
                         </div>
-                        <input type="number" id="thresholdInput" value="50" min="0.1" max="90" step="0.1" style="width: 60px; padding: 8px; border: 2px solid #ddd; border-radius: 6px; font-size: 0.95em;">
+                        <input type="number" id="thresholdInput" value="50" min="0.1" max="90" step="0.1" style="width: 60px; padding: 8px; border: 2px solid #3a4055; border-radius: 6px; font-size: 0.95em; background: #1e2235; color: #e8e9ed;">
                     </div>
                 </div>
                 
@@ -498,7 +558,7 @@
                         <p>This tool corrects for <strong><a href="https://en.wikipedia.org/wiki/Base_rate_fallacy" target="_blank">base rate neglect</a></strong> (also called base rate bias or the base rate fallacy) - a common cognitive bias where people ignore how the prevalence of a problem affects test outcomes.</p>
                         <p>The simulator applies <strong><a href="https://en.wikipedia.org/wiki/Bayes%27_theorem" target="_blank">Bayes' theorem</a></strong> to show you four outcome categories instead of just one accuracy number. It displays results in <strong><a href="https://www.researchgate.net/publication/44213832_How_to_Improve_Bayesian_Reasoning_Without_Instruction_Frequency_Formats" target="_blank">frequency format</a></strong> (actual counts of people) rather than percentages, which helps our intuitions work better when reasoning about probabilities.</p>
                         <p>Even highly accurate tests can produce more false positives than true positives when screening for rare conditions. This has profound implications for mass screening programs in health, security, and education.</p>
-                        <p><strong>📖 Want to learn more?</strong> Read the full explanation of why rare-event screening is so dangerous and how this tool fits into the bigger picture: <a href="https://wildetruth.substack.com/p/rarity-roulette" target="_blank" style="color: #667eea; font-weight: 600;">Rarity Roulette: Making the Math of Mass Screenings Visible</a></p>
+                        <p><strong>📖 Want to learn more?</strong> Read the full explanation of why rare-event screening is so dangerous and how this tool fits into the bigger picture: <a href="https://wildetruth.substack.com/p/rarity-roulette" target="_blank">Rarity Roulette: Making the Math of Mass Screenings Visible</a></p>
                     </div>
                     
                     <div class="info-section">
@@ -549,9 +609,9 @@
         </div>
     </div>
     
-    <footer style="text-align: center; padding: 20px; color: #666; font-size: 0.9em; border-top: 1px solid #e0e0e0;">
-        Created by <a href="https://wildetruth.substack.com" target="_blank" style="color: #667eea; text-decoration: none;">Vera Wilde</a> • Built with assistance from Claude (Anthropic AI)<br>
-        <a href="https://wildetruth.substack.com/p/rarity-roulette" target="_blank" style="color: #667eea; text-decoration: none; margin-top: 8px; display: inline-block;">Read more about this tool →</a>
+    <footer>
+        Created by <a href="https://wildetruth.substack.com" target="_blank">Vera Wilde</a> • Built with assistance from Claude (Anthropic AI)<br>
+        <a href="https://wildetruth.substack.com/p/rarity-roulette" target="_blank" style="margin-top: 8px; display: inline-block;">Read more about this tool →</a>
     </footer>
     
     <script>
