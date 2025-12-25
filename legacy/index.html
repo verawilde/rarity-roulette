@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rarity Roulette (Legacy Table Version)</title>
+    <link rel="icon" type="image/png" href="../favicon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #1e2235;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #282d42;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+        
+        .legacy-notice {
+            background: #3a2a2d;
+            border-bottom: 1px solid #f56476;
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 0.95em;
+            color: #e8e9ed;
+        }
+        
+        .legacy-notice a {
+            color: #f56476;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        
+        .legacy-notice a:hover {
+            text-decoration: underline;
+        }
+        
+        header {
+            background: #1e2235;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-bottom: 1px solid #3a4055;
+        }
+        
+        .header-logo {
+            max-width: 300px;
+            height: auto;
+            display: block;
+            margin: 0 auto 15px auto;
+        }
+        
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            color: #b8bcc8;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 0;
+            min-height: 600px;
+        }
+        
+        .controls {
+            background: #2d324a;
+            padding: 30px;
+            border-right: 1px solid #3a4055;
+        }
+        
+        .control-group {
+            margin-bottom: 25px;
+        }
+        
+        .control-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #e8e9ed;
+            font-size: 0.95em;
+            position: relative;
+            cursor: help;
+        }
+        
+        .info-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background: #f56476;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 16px;
+            font-size: 12px;
+            margin-left: 5px;
+            cursor: help;
+        }
+        
+        .tooltip {
+            visibility: hidden;
+            position: absolute;
+            z-index: 1000;
+            background: #1e2235;
+            color: #e8e9ed;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: normal;
+            width: 280px;
+            top: 100%;
+            left: 0;
+            margin-top: 5px;
+            line-height: 1.4;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            border: 1px solid #3a4055;
+        }
+        
+        .control-group label:hover .tooltip {
+            visibility: visible;
+        }
+        
+        .frequency-input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 0.9em;
+            color: #b8bcc8;
+        }
+        
+        .frequency-input input {
+            width: 80px;
+            padding: 6px;
+            border: 1px solid #3a4055;
+            border-radius: 4px;
+            background: #1e2235;
+            color: #e8e9ed;
+        }
+        
+        .control-group input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #3a4055;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+            background: #1e2235;
+            color: #e8e9ed;
+        }
+        
+        .control-group input[type="number"]:focus {
+            outline: none;
+            border-color: #f56476;
+        }
+        
+        .slider-container {
+            margin-top: 10px;
+        }
+        
+        .slider-container input[type="range"] {
+            width: 100%;
+            height: 6px;
+            background: #3a4055;
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .slider-marks {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75em;
+            color: #8a8f9f;
+            margin-top: 5px;
+            padding: 0 2px;
+        }
+        
+        .slider-container input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #f56476;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        
+        .slider-container input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: #f56476;
+            cursor: pointer;
+            border-radius: 50%;
+            border: none;
+        }
+        
+        .slider-value {
+            display: inline-block;
+            background: #f56476;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #3a4055;
+            border-radius: 6px;
+            font-size: 1em;
+            background: #1e2235;
+            color: #e8e9ed;
+            cursor: pointer;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: #f56476;
+        }
+        
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #f56476;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(245, 100, 118, 0.4);
+            background: #ff7a8a;
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .results {
+            padding: 30px;
+            background: #282d42;
+        }
+        
+        .results-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #8a8f9f;
+            font-size: 1.2em;
+            text-align: center;
+        }
+        
+        .results-content {
+            display: none;
+        }
+        
+        .results-content.show {
+            display: block;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: right;
+            border: 1px solid #3a4055;
+        }
+        
+        th {
+            background: #f56476;
+            color: white;
+            font-weight: 600;
+        }
+        
+        th:first-child, td:first-child {
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            background: #2d324a;
+            color: #e8e9ed;
+        }
+        
+        tr:nth-child(even) td {
+            background: #323850;
+        }
+        
+        .total-row td {
+            background: #3a4055 !important;
+            font-weight: 700;
+            color: #f56476;
+        }
+        
+        .interpretation {
+            background: #3a2a2d;
+            border-left: 4px solid #f56476;
+            padding: 20px;
+            border-radius: 6px;
+            line-height: 1.8;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
+        }
+        
+        .interpretation h3 {
+            color: #f56476;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .interpretation p {
+            color: #e8e9ed;
+            margin-bottom: 12px;
+        }
+        
+        .stat-highlight {
+            background: #f56476;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 700;
+            display: inline-block;
+            white-space: nowrap;
+        }
+        
+        .info-section {
+            background: #2d324a;
+            padding: 30px;
+            margin-top: 20px;
+            border-radius: 8px;
+            line-height: 1.6;
+            border: 1px solid #3a4055;
+        }
+        
+        .info-section h3 {
+            color: #f56476;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .info-section h4 {
+            color: #e8e9ed;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+        
+        .info-section p {
+            margin-bottom: 12px;
+            color: #b8bcc8;
+        }
+        
+        .info-section ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .info-section li {
+            margin-bottom: 8px;
+            color: #b8bcc8;
+        }
+        
+        .info-section a {
+            color: #f56476;
+            text-decoration: none;
+        }
+        
+        .info-section a:hover {
+            text-decoration: underline;
+            color: #ff7a8a;
+        }
+        
+        .info-section strong {
+            color: #e8e9ed;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #8a8f9f;
+            font-size: 0.9em;
+            border-top: 1px solid #3a4055;
+            background: #1e2235;
+        }
+        
+        footer a {
+            color: #f56476;
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+            color: #ff7a8a;
+        }
+        
+        @media (max-width: 968px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                border-right: none;
+                border-bottom: 1px solid #3a4055;
+            }
+            
+            .tooltip {
+                width: 220px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="legacy-notice">
+            📋 This is the <strong>legacy table version</strong> of Rarity Roulette. <a href="../">View the current version with frequency tree visualization →</a>
+        </div>
+        <header>
+            <img src="../rarity_roulette_logo.png" alt="Rarity Roulette" class="header-logo">
+            <p>This simulator estimates outcomes of mass screenings for low-prevalence problems to help people correct for base rate bias. When something is very rare, even in a highly accurate mass screening, the common (false positives) overwhelms the rare (true positives). When secondary screening cannot sort false from true positives without substantial costs and with high certainty, these programs may cause massive, preventable societal harm.</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="controls">
+                <div class="control-group">
+                    <label for="scenario">Try a Real-World Example</label>
+                    <select id="scenario" onchange="loadScenario()">
+                        <option value="">-- Select a scenario --</option>
+                        <option value="polygraph_suspicious">Fienberg/NAS, Polygraph - Suspicious Mode (2003)</option>
+                        <option value="polygraph_friendly">Fienberg/NAS, Polygraph - Friendly Mode (2003)</option>
+                        <option value="mammography">Harding Center, Mammography Screening (2021)</option>
+                        <option value="psa">Harding Center, PSA Testing (2020)</option>
+                        <option value="prenatal">Young-Saver/NYT, Prenatal Testing - DiGeorge Syndrome (2022)</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label for="population">Population Size</label>
+                    <input type="number" id="population" value="1000000" min="1000" step="1000">
+                </div>
+                
+                <div class="control-group">
+                    <label>
+                        Base Rate (Prevalence)
+                        <span class="info-icon">?</span>
+                        <span class="tooltip">This represents the true occurrence rate (population-level incidence) of the condition/problem being screened. For rare problems, this might be 1 in 10,000 or less.</span>
+                    </label>
+                    <div class="frequency-input">
+                        <span style="margin-right: 8px;">1 in</span>
+                        <input type="number" id="baseRateFreq" value="10000" min="10" step="10" style="flex: 1;">
+                    </div>
+                    <small style="color: #8a8f9f; display: block; margin-top: 5px;">
+                        Prevalence: <span id="prevalenceDisplay">0.01%</span>
+                    </small>
+                </div>
+                
+                <div class="control-group">
+                    <label>
+                        Test Accuracy (True Positive Rate)
+                        <span class="slider-value" id="accuracyValue">75%</span>
+                        <span class="info-icon">?</span>
+                        <span class="tooltip">Also called "sensitivity." This is the probability that the test correctly identifies someone who actually has the condition. Higher accuracy means fewer false negatives (missed cases).</span>
+                    </label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <div class="slider-container" style="flex: 1;">
+                            <input type="range" id="accuracy" min="1" max="100" value="75" step="1">
+                            <div class="slider-marks">
+                                <span>1%</span>
+                                <span>20%</span>
+                                <span>40%</span>
+                                <span>60%</span>
+                                <span>80%</span>
+                                <span>100%</span>
+                            </div>
+                        </div>
+                        <input type="number" id="accuracyInput" value="75" min="1" max="100" step="1" style="width: 60px; padding: 8px; border: 2px solid #3a4055; border-radius: 6px; font-size: 0.95em; background: #1e2235; color: #e8e9ed;">
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    <label>
+                        Detection Threshold
+                        <span class="slider-value" id="thresholdValue">50%</span>
+                        <span class="info-icon">?</span>
+                        <span class="tooltip">The test's capacity to detect the signal at a particular performance level. This determines the false positive rate - how many without the signal get incorrectly flagged.</span>
+                    </label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <div class="slider-container" style="flex: 1;">
+                            <input type="range" id="threshold" min="0.1" max="90" value="50" step="0.01">
+                            <div class="slider-marks">
+                                <span>0.1%</span>
+                                <span>20%</span>
+                                <span>40%</span>
+                                <span>60%</span>
+                                <span>80%</span>
+                                <span>90%</span>
+                            </div>
+                        </div>
+                        <input type="number" id="thresholdInput" value="50" min="0.1" max="90" step="0.1" style="width: 60px; padding: 8px; border: 2px solid #3a4055; border-radius: 6px; font-size: 0.95em; background: #1e2235; color: #e8e9ed;">
+                    </div>
+                </div>
+                
+                <button onclick="generateResults()">Generate Results</button>
+            </div>
+            
+            <div class="results">
+                <div class="results-placeholder" id="placeholder">
+                    Adjust parameters and click "Generate Results"
+                </div>
+                
+                <div class="results-content" id="resultsContent">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Truth</th>
+                                <th>Failed Test (Flagged)</th>
+                                <th>Passed Test (Not Flagged)</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                        </tbody>
+                    </table>
+                    
+                    <div class="interpretation">
+                        <h3>📊 Results Summary</h3>
+                        <div id="interpretationText"></div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>How This Works</h3>
+                        <p>This tool corrects for <strong><a href="https://en.wikipedia.org/wiki/Base_rate_fallacy" target="_blank">base rate neglect</a></strong> (also called base rate bias or the base rate fallacy) - a common cognitive bias where people ignore how the prevalence of a problem affects test outcomes.</p>
+                        <p>The simulator applies <strong><a href="https://en.wikipedia.org/wiki/Bayes%27_theorem" target="_blank">Bayes' theorem</a></strong> to show you four outcome categories instead of just one accuracy number. It displays results in <strong><a href="https://www.researchgate.net/publication/44213832_How_to_Improve_Bayesian_Reasoning_Without_Instruction_Frequency_Formats" target="_blank">frequency format</a></strong> (actual counts of people) rather than percentages, which helps our intuitions work better when reasoning about probabilities.</p>
+                        <p>Even highly accurate tests can produce more false positives than true positives when screening for rare conditions. This has profound implications for mass screening programs in health, security, and education.</p>
+                        <p><strong>📖 Want to learn more?</strong> Read the full explanation of why rare-event screening is so dangerous and how this tool fits into the bigger picture: <a href="https://wildetruth.substack.com/p/rarity-roulette" target="_blank">Rarity Roulette: Making the Math of Mass Screenings Visible</a></p>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Real-World Examples</h3>
+                        <p>Mass screenings for low-prevalence problems appear across many domains:</p>
+                        <ul>
+                            <li><a href="https://nap.nationalacademies.org/read/10420/chapter/2#5" target="_blank">Stephen E. Fienberg (Chair), Committee to Review the Scientific Evidence on the Polygraph, National Research Council, "The Polygraph and Lie Detection" (2003)</a> - Landmark analysis showing why mass polygraph screening of National Lab scientists would harm security rather than help it</li>
+                            <li><a href="https://www.hardingcenter.de/en/transfer-and-impact/fact-boxes/early-detection-of-cancer/early-detection-of-breast-cancer-by-mammography-screening" target="_blank">Harding Center for Risk Literacy, "Early Detection of Breast Cancer by Mammography Screening" (updated April 2021)</a> - Clear presentation of trade-offs in population-wide breast cancer screening</li>
+                            <li><a href="https://www.hardingcenter.de/en/transfer-and-impact/fact-boxes/early-detection-of-cancer/early-detection-of-prostate-cancer-with-psa-testing" target="_blank">Harding Center for Risk Literacy, "Early Detection of Prostate Cancer with PSA Testing" (updated November 2020)</a> - Example of screening trade-offs for Prostate-Specific Antigen testing</li>
+                            <li><a href="https://www.nytimes.com/2022/02/10/learning/lesson-plans/the-misleading-math-of-prenatal-tests.html" target="_blank">Dashiell Young-Saver, "The Misleading Math of Prenatal Tests," New York Times (Feb. 10, 2022)</a> - Analysis of false positives in prenatal genetic screening</li>
+                        </ul>
+                        <p><strong>Note:</strong> The mammography and PSA examples use parameters extrapolated from the Harding Center's long-term screening data to match their published false-alarm rates. The Harding fact boxes provide more comprehensive outcomes (e.g., mortality, overdiagnosis, quality-of-life effects), whereas this tool focuses solely on test-classification accuracy. The purpose is illustrative, not a substitute for full cohort data.</p>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Important Considerations</h3>
+                        <p>These outcome estimates assume the stated accuracy rates are correct and precisely known. In practice, several factors may distort these estimates:</p>
+                        
+                        <h4>Why accuracy may be inflated:</h4>
+                        <ul>
+                            <li>Tests often perform better in controlled lab settings than in real-world field conditions</li>
+                            <li>Accuracy parameters themselves carry uncertainty (see <a href="https://sites.stat.columbia.edu/gelman/research/published/specificity.pdf" target="_blank">Gelman & Carpenter, 2020</a>)</li>
+                            <li>Researchers and tool developers have financial and professional incentives to report favorable results</li>
+                        </ul>
+                        
+                        <h4>Why error rates may be misleading:</h4>
+                        <ul>
+                            <li>False negatives may be underestimated when dedicated adversaries actively game the system (e.g., espionage, fraud)</li>
+                            <li>Detection thresholds for continuous biomarkers are often set arbitrarily</li>
+                            <li>Test performance may vary substantially across demographic subgroups</li>
+                        </ul>
+                        
+                        <h4>Hidden costs of false positives:</h4>
+                        <ul>
+                            <li>Secondary screenings may cause unintended harm (e.g., elevated mortality risks from unnecessary radiation/other treatment, chronic pain from unnecessary biopsy or mastectomy, psychological distress, and job loss)</li>
+                            <li>Those who benefit financially from follow-up testing often set screening guidelines</li>
+                            <li>Individuals flagged incorrectly bear costs while having no actual condition</li>
+                        </ul>
+                        
+                        <h4>What this tool doesn't capture:</h4>
+                        <ul>
+                            <li>This calculates hypothetical estimates along only one causal pathway — the classification pathway</li>
+                            <li>It does not compute net effects accounting for test classification, strategy, information, and <a href="https://wildetruth.substack.com/p/resource-reallocation" target="_blank">resource reallocation</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <a href="https://wildetruth.substack.com/p/rarity-roulette" target="_blank">Read more about this tool →</a>
+    </footer>
+    
+    <script>
+        // Update slider displays and sync with input boxes
+        document.getElementById('accuracy').addEventListener('input', function(e) {
+            const value = e.target.value;
+            document.getElementById('accuracyValue').textContent = value + '%';
+            document.getElementById('accuracyInput').value = value;
+        });
+        
+        document.getElementById('accuracyInput').addEventListener('input', function(e) {
+            const value = Math.min(100, Math.max(1, parseInt(e.target.value) || 1));
+            document.getElementById('accuracy').value = value;
+            document.getElementById('accuracyValue').textContent = value + '%';
+        });
+        
+        document.getElementById('threshold').addEventListener('input', function(e) {
+            const value = parseFloat(e.target.value).toFixed(2);
+            document.getElementById('thresholdValue').textContent = value + '%';
+            document.getElementById('thresholdInput').value = value;
+        });
+        
+        document.getElementById('thresholdInput').addEventListener('input', function(e) {
+            const value = Math.min(90, Math.max(0.1, parseFloat(e.target.value) || 0.1));
+            document.getElementById('threshold').value = value;
+            document.getElementById('thresholdValue').textContent = value.toFixed(2) + '%';
+        });
+        
+        document.getElementById('baseRateFreq').addEventListener('input', function(e) {
+            const denominator = parseInt(e.target.value);
+            const prevalence = (1 / denominator * 100).toFixed(4);
+            document.getElementById('prevalenceDisplay').textContent = prevalence + '%';
+        });
+        
+        function loadScenario() {
+            const scenario = document.getElementById('scenario').value;
+            
+            const scenarios = {
+                polygraph_suspicious: {
+                    population: 10000,
+                    baseRate: 1000,
+                    accuracy: 80,
+                    falsePositiveRate: 16
+                },
+                polygraph_friendly: {
+                    population: 10000,
+                    baseRate: 1000,
+                    accuracy: 20,
+                    falsePositiveRate: 0.39
+                },
+                mammography: {
+                    population: 1000,
+                    baseRate: 200,
+                    accuracy: 90,
+                    falsePositiveRate: 10.05
+                },
+                psa: {
+                    population: 1000,
+                    baseRate: 40,
+                    accuracy: 85,
+                    falsePositiveRate: 15.897
+                },
+                prenatal: {
+                    population: 100000,
+                    baseRate: 4000,
+                    accuracy: 99.9,
+                    falsePositiveRate: 0.1
+                }
+            };
+            
+            if (scenario && scenarios[scenario]) {
+                const s = scenarios[scenario];
+                document.getElementById('population').value = s.population;
+                document.getElementById('baseRateFreq').value = s.baseRate;
+                document.getElementById('accuracy').value = s.accuracy;
+                document.getElementById('accuracyInput').value = s.accuracy;
+                document.getElementById('threshold').value = s.falsePositiveRate;
+                document.getElementById('thresholdInput').value = s.falsePositiveRate;
+                
+                // Update displays
+                document.getElementById('accuracyValue').textContent = s.accuracy + '%';
+                document.getElementById('thresholdValue').textContent = s.falsePositiveRate.toFixed(2) + '%';
+                const prevalence = (1 / s.baseRate * 100).toFixed(4);
+                document.getElementById('prevalenceDisplay').textContent = prevalence + '%';
+                
+                // Auto-generate results
+                generateResults();
+            }
+        }
+        
+        function formatNumber(num) {
+            return Math.round(num).toLocaleString('en-US');
+        }
+        
+        function generateResults() {
+            const population = parseInt(document.getElementById('population').value);
+            const baseRateDenominator = parseInt(document.getElementById('baseRateFreq').value);
+            const accuracy = parseFloat(document.getElementById('accuracy').value) / 100;
+            const falsePositiveRate = parseFloat(document.getElementById('threshold').value) / 100;
+            
+            const baseRate = 1 / baseRateDenominator;
+            
+            const actualPositives = population * baseRate;
+            const actualNegatives = population - actualPositives;
+            
+            const truePositives = actualPositives * accuracy;
+            const falseNegatives = actualPositives - truePositives;
+            
+            const falsePositives = actualNegatives * falsePositiveRate;
+            const trueNegatives = actualNegatives - falsePositives;
+            
+            const totalFlagged = truePositives + falsePositives;
+            const totalNotFlagged = falseNegatives + trueNegatives;
+            
+            const probFlaggedIsInnocent = (falsePositives / totalFlagged) * 100;
+            const probBenignFlagged = (falsePositives / population) * 100;
+            const probProblemMissed = (falseNegatives / actualPositives) * 100;
+            const falsePositivesPerTruePositive = falsePositives / truePositives;
+            
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = `
+                <tr>
+                    <td>Signal Present (Problem Exists)</td>
+                    <td>${formatNumber(truePositives)}</td>
+                    <td>${formatNumber(falseNegatives)}</td>
+                    <td>${formatNumber(actualPositives)}</td>
+                </tr>
+                <tr>
+                    <td>No Signal (No Problem)</td>
+                    <td>${formatNumber(falsePositives)}</td>
+                    <td>${formatNumber(trueNegatives)}</td>
+                    <td>${formatNumber(actualNegatives)}</td>
+                </tr>
+                <tr class="total-row">
+                    <td>Total</td>
+                    <td>${formatNumber(totalFlagged)}</td>
+                    <td>${formatNumber(totalNotFlagged)}</td>
+                    <td>${formatNumber(population)}</td>
+                </tr>
+            `;
+            
+            const interpretationText = document.getElementById('interpretationText');
+            interpretationText.innerHTML = `
+                <p>Assuming a base rate of <span class="stat-highlight">1 in ${formatNumber(baseRateDenominator)}</span> (${(baseRate * 100).toFixed(4)}% prevalence), 
+                a <span class="stat-highlight">${(falsePositiveRate * 100).toFixed(2)}%</span> false positive rate, 
+                and a <span class="stat-highlight">${(accuracy * 100).toFixed(0)}%</span> true positive rate, 
+                screening <span class="stat-highlight">${formatNumber(population)}</span> people would be expected to generate:</p>
+                
+                <p><strong>${formatNumber(falsePositives)}</strong> false positives (innocent cases flagged)</p>
+                
+                <p>A case flagged as concerning would have a <span class="stat-highlight">${probFlaggedIsInnocent.toFixed(2)}%</span> probability 
+                (<span class="stat-highlight">${formatNumber(falsePositives)}/${formatNumber(totalFlagged)}</span>) 
+                of actually being innocent.</p>
+                
+                <p>A benign case would have a <span class="stat-highlight">${probBenignFlagged.toFixed(2)}%</span> chance 
+                (<span class="stat-highlight">${formatNumber(falsePositives)}/${formatNumber(population)}</span>) 
+                of being flagged.</p>
+                
+                <p>Yet <span class="stat-highlight">${probProblemMissed.toFixed(1)}%</span> of real problems 
+                would be expected to evade detection (false negatives).</p>
+                
+                <p>Meanwhile, approximately <span class="stat-highlight">${formatNumber(falsePositivesPerTruePositive)}</span> 
+                people would be expected to be mistakenly flagged for each real problem found 
+                (<span class="stat-highlight">${formatNumber(falsePositives)} false positives / ${formatNumber(truePositives)} true positives</span>).</p>
+            `;
+            
+            document.getElementById('placeholder').style.display = 'none';
+            document.getElementById('resultsContent').classList.add('show');
+        }
+    </script>
+</body>
+</html>
