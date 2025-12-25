@@ -77,6 +77,7 @@
         .stat-highlight { background: #f56476; color: white; padding: 2px 6px; border-radius: 3px; font-weight: 700; display: inline-block; white-space: nowrap; }
         .info-section { background: #2d324a; padding: 30px; margin-top: 20px; border-radius: 8px; line-height: 1.6; border: 1px solid #3a4055; }
         .info-section h3 { color: #f56476; margin-bottom: 15px; font-size: 1.3em; }
+        .info-section h4 { color: #e8e9ed; margin-top: 15px; margin-bottom: 10px; font-size: 1.05em; }
         .info-section p { margin-bottom: 12px; color: #b8bcc8; }
         .info-section ul { margin-left: 20px; margin-bottom: 15px; }
         .info-section li { margin-bottom: 8px; color: #b8bcc8; }
@@ -112,7 +113,7 @@
                 
                 <div class="control-group">
                     <label for="population">Population Size</label>
-                    <input type="number" id="population" value="1000" min="100" step="100">
+                    <input type="number" id="population" value="1000000" min="1000" step="1000">
                 </div>
                 
                 <div class="control-group">
@@ -123,10 +124,10 @@
                     </label>
                     <div class="frequency-input">
                         <span style="margin-right: 8px;">1 in</span>
-                        <input type="number" id="baseRateFreq" value="100" min="2" step="1" style="flex: 1;">
+                        <input type="number" id="baseRateFreq" value="10000" min="10" step="10" style="flex: 1;">
                     </div>
                     <small style="color: #8a8f9f; display: block; margin-top: 5px;">
-                        Prevalence: <span id="prevalenceDisplay">1%</span>
+                        Prevalence: <span id="prevalenceDisplay">0.01%</span>
                     </small>
                 </div>
                 
@@ -148,17 +149,17 @@
                 
                 <div class="control-group">
                     <label>
-                        False Positive Rate
-                        <span class="slider-value" id="thresholdValue">10%</span>
+                        Detection Threshold
+                        <span class="slider-value" id="thresholdValue">50%</span>
                         <span class="info-icon">?</span>
-                        <span class="tooltip">The probability that someone WITHOUT the condition gets incorrectly flagged as positive. Lower is better, but even low rates create many false alarms when screening large populations.</span>
+                        <span class="tooltip">The test's capacity to detect the signal at a particular performance level. This determines the false positive rate - how many without the signal get incorrectly flagged.</span>
                     </label>
                     <div style="display: flex; gap: 10px; align-items: center;">
                         <div class="slider-container" style="flex: 1;">
-                            <input type="range" id="threshold" min="0.1" max="50" value="10" step="0.1">
-                            <div class="slider-marks"><span>0.1%</span><span>10%</span><span>20%</span><span>30%</span><span>40%</span><span>50%</span></div>
+                            <input type="range" id="threshold" min="0.1" max="90" value="50" step="0.01">
+                            <div class="slider-marks"><span>0.1%</span><span>20%</span><span>40%</span><span>60%</span><span>80%</span><span>90%</span></div>
                         </div>
-                        <input type="number" id="thresholdInput" value="10" min="0.1" max="50" step="0.1" style="width: 60px; padding: 8px; border: 2px solid #3a4055; border-radius: 6px; font-size: 0.95em; background: #1e2235; color: #e8e9ed;">
+                        <input type="number" id="thresholdInput" value="50" min="0.1" max="90" step="0.1" style="width: 60px; padding: 8px; border: 2px solid #3a4055; border-radius: 6px; font-size: 0.95em; background: #1e2235; color: #e8e9ed;">
                     </div>
                 </div>
                 
@@ -171,11 +172,13 @@
                 <div class="results-placeholder" id="placeholder">Adjust parameters and click "Generate Results"</div>
                 
                 <div class="results-content" id="resultsContent">
+                    <!-- Frequency Tree Visualization -->
                     <div class="frequency-tree">
-                        <h3>🌳 Frequency Tree: Follow the Numbers</h3>
+                        <h3>Frequency Tree: Follow the Numbers</h3>
                         <div class="tree-container" id="treeContainer"></div>
                     </div>
                     
+                    <!-- Key Insight -->
                     <div class="key-insight">
                         <div class="key-insight-label">THE KEY QUESTION: If someone tests positive, what's the chance they actually have the condition?</div>
                         <div class="key-insight-value" id="ppvDisplay">—</div>
@@ -183,10 +186,11 @@
                     </div>
                     
                     <div class="interpretation">
-                        <h3>📊 Results Summary</h3>
+                        <h3>Results Summary</h3>
                         <div id="interpretationText"></div>
                     </div>
                     
+                    <!-- How to Read the Tree - NEW SECTION -->
                     <div class="info-section">
                         <h3>How to Read the Tree</h3>
                         <p><strong>Level 1:</strong> Start with the whole population at the top.</p>
@@ -195,25 +199,57 @@
                         <p><strong>The critical insight:</strong> To find the probability that a positive test is correct, look at <em>all positive tests</em> — that's true positives plus false positives. The answer is: true positives ÷ (true positives + false positives).</p>
                     </div>
                     
+                    <!-- ORIGINAL CONTENT RESTORED BELOW -->
                     <div class="info-section">
-                        <h3>Real-World Examples</h3>
-                        <ul>
-                            <li><a href="https://nap.nationalacademies.org/read/10420/chapter/2#5" target="_blank">Fienberg/NAS, "The Polygraph and Lie Detection" (2003)</a> — Why mass polygraph screening fails</li>
-                            <li><a href="https://www.hardingcenter.de/en/transfer-and-impact/fact-boxes/early-detection-of-cancer/early-detection-of-breast-cancer-by-mammography-screening" target="_blank">Harding Center, Mammography Screening (2021)</a> — Trade-offs in breast cancer screening</li>
-                            <li><a href="https://www.hardingcenter.de/en/transfer-and-impact/fact-boxes/early-detection-of-cancer/early-detection-of-prostate-cancer-with-psa-testing" target="_blank">Harding Center, PSA Testing (2020)</a> — Prostate cancer screening trade-offs</li>
-                            <li><a href="https://www.nytimes.com/2022/02/10/learning/lesson-plans/the-misleading-math-of-prenatal-tests.html" target="_blank">Young-Saver/NYT, Prenatal Testing (2022)</a> — False positives in genetic screening</li>
-                        </ul>
+                        <h3>How This Works</h3>
+                        <p>This tool corrects for <strong><a href="https://en.wikipedia.org/wiki/Base_rate_fallacy" target="_blank">base rate neglect</a></strong> (also called base rate bias or the base rate fallacy) - a common cognitive bias where people ignore how the prevalence of a problem affects test outcomes.</p>
+                        <p>The simulator applies <strong><a href="https://en.wikipedia.org/wiki/Bayes%27_theorem" target="_blank">Bayes' theorem</a></strong> to show you four outcome categories instead of just one accuracy number. It displays results in <strong><a href="https://www.researchgate.net/publication/44213832_How_to_Improve_Bayesian_Reasoning_Without_Instruction_Frequency_Formats" target="_blank">frequency format</a></strong> (actual counts of people) rather than percentages, which helps our intuitions work better when reasoning about probabilities.</p>
+                        <p>Even highly accurate tests can produce more false positives than true positives when screening for rare conditions. This has profound implications for mass screening programs in health, security, and education.</p>
+                        <p><strong>Want to learn more?</strong> Read the full explanation of why rare-event screening is so dangerous and how this tool fits into the bigger picture: <a href="https://wildetruth.substack.com/p/rarity-roulette" target="_blank">Rarity Roulette: Making the Math of Mass Screenings Visible</a></p>
                     </div>
                     
                     <div class="info-section">
-                        <h3>Important Limitations</h3>
+                        <h3>Real-World Examples</h3>
+                        <p>Mass screenings for low-prevalence problems appear across many domains:</p>
                         <ul>
-                            <li>Accuracy may be inflated (lab vs. field conditions, publication bias)</li>
-                            <li>Base rates may be uncertain or vary across subgroups</li>
-                            <li>False positives carry hidden costs (unnecessary procedures, psychological harm, job loss)</li>
-                            <li>This models only the classification pathway, not deterrence, elicitation, or resource reallocation effects</li>
+                            <li><a href="https://nap.nationalacademies.org/read/10420/chapter/2#5" target="_blank">Stephen E. Fienberg (Chair), Committee to Review the Scientific Evidence on the Polygraph, National Research Council, "The Polygraph and Lie Detection" (2003)</a> - Landmark analysis showing why mass polygraph screening of National Lab scientists would harm security rather than help it</li>
+                            <li><a href="https://www.hardingcenter.de/en/transfer-and-impact/fact-boxes/early-detection-of-cancer/early-detection-of-breast-cancer-by-mammography-screening" target="_blank">Harding Center for Risk Literacy, "Early Detection of Breast Cancer by Mammography Screening" (updated April 2021)</a> - Clear presentation of trade-offs in population-wide breast cancer screening</li>
+                            <li><a href="https://www.hardingcenter.de/en/transfer-and-impact/fact-boxes/early-detection-of-cancer/early-detection-of-prostate-cancer-with-psa-testing" target="_blank">Harding Center for Risk Literacy, "Early Detection of Prostate Cancer with PSA Testing" (updated November 2020)</a> - Example of screening trade-offs for Prostate-Specific Antigen testing</li>
+                            <li><a href="https://www.nytimes.com/2022/02/10/learning/lesson-plans/the-misleading-math-of-prenatal-tests.html" target="_blank">Dashiell Young-Saver, "The Misleading Math of Prenatal Tests," New York Times (Feb. 10, 2022)</a> - Analysis of false positives in prenatal genetic screening</li>
                         </ul>
-                        <p><strong>📖 Learn more:</strong> <a href="https://wildetruth.substack.com/p/rarity-roulette" target="_blank">Full explanation of why rare-event screening is dangerous</a></p>
+                        <p><strong>Note:</strong> The mammography and PSA examples use parameters extrapolated from the Harding Center's long-term screening data to match their published false-alarm rates. The Harding fact boxes provide more comprehensive outcomes (e.g., mortality, overdiagnosis, quality-of-life effects), whereas this tool focuses solely on test-classification accuracy. The purpose is illustrative, not a substitute for full cohort data.</p>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Important Considerations</h3>
+                        <p>These outcome estimates assume the stated accuracy rates are correct and precisely known. In practice, several factors may distort these estimates:</p>
+                        
+                        <h4>Why accuracy may be inflated:</h4>
+                        <ul>
+                            <li>Tests often perform better in controlled lab settings than in real-world field conditions</li>
+                            <li>Accuracy parameters themselves carry uncertainty (see <a href="https://sites.stat.columbia.edu/gelman/research/published/specificity.pdf" target="_blank">Gelman & Carpenter, 2020</a>)</li>
+                            <li>Researchers and tool developers have financial and professional incentives to report favorable results</li>
+                        </ul>
+                        
+                        <h4>Why error rates may be misleading:</h4>
+                        <ul>
+                            <li>False negatives may be underestimated when dedicated adversaries actively game the system (e.g., espionage, fraud)</li>
+                            <li>Detection thresholds for continuous biomarkers are often set arbitrarily</li>
+                            <li>Test performance may vary substantially across demographic subgroups</li>
+                        </ul>
+                        
+                        <h4>Hidden costs of false positives:</h4>
+                        <ul>
+                            <li>Secondary screenings may cause unintended harm (e.g., elevated mortality risks from unnecessary radiation/other treatment, chronic pain from unnecessary biopsy or mastectomy, psychological distress, and job loss)</li>
+                            <li>Those who benefit financially from follow-up testing often set screening guidelines</li>
+                            <li>Individuals flagged incorrectly bear costs while having no actual condition</li>
+                        </ul>
+                        
+                        <h4>What this tool doesn't capture:</h4>
+                        <ul>
+                            <li>This calculates hypothetical estimates along only one causal pathway — the classification pathway</li>
+                            <li>It does not compute net effects accounting for test classification, strategy, information, and <a href="https://wildetruth.substack.com/p/resource-reallocation" target="_blank">resource reallocation</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -233,18 +269,18 @@
             document.getElementById('accuracyValue').textContent = value + '%';
         });
         document.getElementById('threshold').addEventListener('input', function(e) {
-            document.getElementById('thresholdValue').textContent = parseFloat(e.target.value).toFixed(1) + '%';
-            document.getElementById('thresholdInput').value = parseFloat(e.target.value).toFixed(1);
+            document.getElementById('thresholdValue').textContent = parseFloat(e.target.value).toFixed(2) + '%';
+            document.getElementById('thresholdInput').value = parseFloat(e.target.value).toFixed(2);
         });
         document.getElementById('thresholdInput').addEventListener('input', function(e) {
-            const value = Math.min(50, Math.max(0.1, parseFloat(e.target.value) || 0.1));
+            const value = Math.min(90, Math.max(0.1, parseFloat(e.target.value) || 0.1));
             document.getElementById('threshold').value = value;
-            document.getElementById('thresholdValue').textContent = value.toFixed(1) + '%';
+            document.getElementById('thresholdValue').textContent = value.toFixed(2) + '%';
         });
         document.getElementById('baseRateFreq').addEventListener('input', function(e) {
-            const denominator = parseInt(e.target.value) || 100;
-            const prevalence = (1 / denominator * 100);
-            document.getElementById('prevalenceDisplay').textContent = prevalence < 0.01 ? prevalence.toExponential(2) + '%' : prevalence.toFixed(4).replace(/\.?0+$/, '') + '%';
+            const denominator = parseInt(e.target.value);
+            const prevalence = (1 / denominator * 100).toFixed(4);
+            document.getElementById('prevalenceDisplay').textContent = prevalence + '%';
         });
         
         function loadScenario() {
@@ -265,15 +301,14 @@
                 document.getElementById('threshold').value = s.falsePositiveRate;
                 document.getElementById('thresholdInput').value = s.falsePositiveRate;
                 document.getElementById('accuracyValue').textContent = s.accuracy + '%';
-                document.getElementById('thresholdValue').textContent = s.falsePositiveRate.toFixed(1) + '%';
-                const prevalence = (1 / s.baseRate * 100);
-                document.getElementById('prevalenceDisplay').textContent = prevalence < 0.01 ? prevalence.toExponential(2) + '%' : prevalence.toFixed(4).replace(/\.?0+$/, '') + '%';
+                document.getElementById('thresholdValue').textContent = s.falsePositiveRate.toFixed(2) + '%';
+                const prevalence = (1 / s.baseRate * 100).toFixed(4);
+                document.getElementById('prevalenceDisplay').textContent = prevalence + '%';
                 generateResults();
             }
         }
         
         function formatNumber(num) {
-            if (num < 1 && num > 0) return num.toFixed(2);
             return Math.round(num).toLocaleString('en-US');
         }
         
@@ -290,9 +325,14 @@
             const falsePositives = actualNegatives * falsePositiveRate;
             const trueNegatives = actualNegatives - falsePositives;
             const totalFlagged = truePositives + falsePositives;
+            const totalNotFlagged = falseNegatives + trueNegatives;
             const ppv = (truePositives / totalFlagged) * 100;
+            const probFlaggedIsInnocent = (falsePositives / totalFlagged) * 100;
+            const probBenignFlagged = (falsePositives / population) * 100;
+            const probProblemMissed = (falseNegatives / actualPositives) * 100;
             const falsePositivesPerTruePositive = falsePositives / truePositives;
             
+            // Generate the frequency tree
             document.getElementById('treeContainer').innerHTML = `
                 <div class="tree-level"><div class="tree-node root"><div class="node-label">Population Screened</div><div class="node-count">${formatNumber(population)}</div></div></div>
                 <div style="width: 2px; height: 30px; background: #f56476; margin: 0 auto;"></div>
@@ -317,16 +357,34 @@
                     </div>
                 </div>`;
             
-            document.getElementById('ppvDisplay').textContent = ppv.toFixed(1) + '%';
-            document.getElementById('ppvExplain').innerHTML = `Of <strong>${formatNumber(totalFlagged)}</strong> positive tests, only <strong>${formatNumber(truePositives)}</strong> are true positives.<br>${formatNumber(truePositives)} ÷ (${formatNumber(truePositives)} + ${formatNumber(falsePositives)}) = <strong>${ppv.toFixed(1)}%</strong>`;
+            // Update PPV display
+            document.getElementById('ppvDisplay').textContent = ppv.toFixed(2) + '%';
+            document.getElementById('ppvExplain').innerHTML = `Of <strong>${formatNumber(totalFlagged)}</strong> positive tests, only <strong>${formatNumber(truePositives)}</strong> are true positives.<br>${formatNumber(truePositives)} ÷ (${formatNumber(truePositives)} + ${formatNumber(falsePositives)}) = <strong>${ppv.toFixed(2)}%</strong>`;
             
+            // Update interpretation - ORIGINAL FORMAT RESTORED
             document.getElementById('interpretationText').innerHTML = `
-                <p>With a base rate of <span class="stat-highlight">1 in ${formatNumber(baseRateDenominator)}</span>, a <span class="stat-highlight">${(falsePositiveRate * 100).toFixed(1)}%</span> false positive rate, and <span class="stat-highlight">${(accuracy * 100).toFixed(0)}%</span> sensitivity, screening <span class="stat-highlight">${formatNumber(population)}</span> people generates:</p>
-                <p>• <strong>${formatNumber(truePositives)}</strong> true positives (correctly identified)</p>
-                <p>• <strong>${formatNumber(falsePositives)}</strong> false positives (incorrectly flagged)</p>
-                <p>• <strong>${formatNumber(falseNegatives)}</strong> false negatives (missed cases)</p>
-                <p>A positive test result has only a <span class="stat-highlight">${ppv.toFixed(1)}%</span> chance of being correct.</p>
-                <p>For every real case found, approximately <span class="stat-highlight">${formatNumber(falsePositivesPerTruePositive)}</span> innocent people are flagged.</p>`;
+                <p>Assuming a base rate of <span class="stat-highlight">1 in ${formatNumber(baseRateDenominator)}</span> (${(baseRate * 100).toFixed(4)}% prevalence), 
+                a <span class="stat-highlight">${(falsePositiveRate * 100).toFixed(2)}%</span> false positive rate, 
+                and a <span class="stat-highlight">${(accuracy * 100).toFixed(0)}%</span> true positive rate, 
+                screening <span class="stat-highlight">${formatNumber(population)}</span> people would be expected to generate:</p>
+                
+                <p><strong>${formatNumber(falsePositives)}</strong> false positives (innocent cases flagged)</p>
+                
+                <p>A case flagged as concerning would have a <span class="stat-highlight">${probFlaggedIsInnocent.toFixed(2)}%</span> probability 
+                (<span class="stat-highlight">${formatNumber(falsePositives)}/${formatNumber(totalFlagged)}</span>) 
+                of actually being innocent.</p>
+                
+                <p>A benign case would have a <span class="stat-highlight">${probBenignFlagged.toFixed(2)}%</span> chance 
+                (<span class="stat-highlight">${formatNumber(falsePositives)}/${formatNumber(population)}</span>) 
+                of being flagged.</p>
+                
+                <p>Yet <span class="stat-highlight">${probProblemMissed.toFixed(1)}%</span> of real problems 
+                would be expected to evade detection (false negatives).</p>
+                
+                <p>Meanwhile, approximately <span class="stat-highlight">${formatNumber(falsePositivesPerTruePositive)}</span> 
+                people would be expected to be mistakenly flagged for each real problem found 
+                (<span class="stat-highlight">${formatNumber(falsePositives)} false positives / ${formatNumber(truePositives)} true positives</span>).</p>
+            `;
             
             document.getElementById('placeholder').style.display = 'none';
             document.getElementById('resultsContent').classList.add('show');
