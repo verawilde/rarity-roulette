@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Policy Simulator | Rarity Roulette</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+        
+        :root {
+            --bg-deep: #0a0f14;
+            --bg-card: #121a22;
+            --text-primary: #e8eaed;
+            --text-secondary: #9aa0a6;
+            --text-muted: #5f6368;
+            --accent-coral: #ff6b6b;
+            --accent-teal: #4ecdc4;
+            --accent-gold: #ffd93d;
+            --accent-purple: #a29bfe;
+            --false-positive: #ff6b6b;
+            --true-positive: #4ecdc4;
+            --false-negative: #ffd93d;
+            --true-negative: #2d3a4a;
+            --border: rgba(255,255,255,0.08);
+            --coin-flip: #ff9f43;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .back-link {
+            display: inline-block;
+            color: var(--accent-teal);
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        
+        .back-link:hover {
+            opacity: 1;
+        }
+        
+        h1 {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+        
+        h1 span {
+            color: var(--accent-coral);
+        }
+        
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+        
+        @media (max-width: 900px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .controls-panel {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+        
+        .controls-panel h2 {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+        
+        .control-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .control-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .control-group input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--border);
+            outline: none;
+            -webkit-appearance: none;
+            margin-bottom: 0.25rem;
+        }
+        
+        .control-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent-teal);
+            cursor: pointer;
+            border: 2px solid var(--bg-deep);
+        }
+        
+        .control-value {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        
+        .years-display {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .year-badge {
+            background: var(--accent-teal);
+            color: var(--bg-deep);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        button {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: var(--accent-teal);
+            color: var(--bg-deep);
+        }
+        
+        .btn-primary:hover {
+            background: #5dddd4;
+        }
+        
+        .btn-secondary {
+            background: var(--border);
+            color: var(--text-primary);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.15);
+        }
+        
+        .visualization-panel {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            min-height: 600px;
+        }
+        
+        .viz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .viz-header h2 {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .legend {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .legend-dot.fp { background: var(--false-positive); }
+        .legend-dot.tp { background: var(--true-positive); }
+        .legend-dot.fn { background: var(--false-negative); }
+        
+        #rose-chart {
+            width: 100%;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* PPV Meter */
+        .ppv-meter {
+            margin: 1rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+        
+        .ppv-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .ppv-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .ppv-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .ppv-value.good { color: var(--accent-teal); }
+        .ppv-value.coin-flip { color: var(--coin-flip); }
+        .ppv-value.bad { color: var(--false-positive); }
+        
+        .ppv-bar-container {
+            position: relative;
+            height: 24px;
+            background: linear-gradient(to right, 
+                var(--false-positive) 0%, 
+                var(--coin-flip) 50%, 
+                var(--accent-teal) 100%);
+            border-radius: 12px;
+            overflow: visible;
+        }
+        
+        .ppv-marker {
+            position: absolute;
+            top: -4px;
+            width: 4px;
+            height: 32px;
+            background: white;
+            border-radius: 2px;
+            transform: translateX(-50%);
+            transition: left 0.5s ease-out;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+        
+        .coin-flip-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 2px;
+            height: 24px;
+            background: rgba(255,255,255,0.5);
+            transform: translateX(-50%);
+        }
+        
+        .coin-flip-label {
+            position: absolute;
+            left: 50%;
+            bottom: -20px;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+        
+        .ppv-endpoints {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        @media (max-width: 600px) {
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255,255,255,0.02);
+            border-radius: 8px;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-value.fp { color: var(--false-positive); }
+        .stat-value.tp { color: var(--true-positive); }
+        .stat-value.fn { color: var(--false-negative); }
+        .stat-value.ratio { color: var(--accent-purple); }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        
+        .insight-box {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: rgba(255, 107, 107, 0.1);
+            border-left: 3px solid var(--false-positive);
+            border-radius: 0 8px 8px 0;
+            transition: all 0.3s;
+        }
+        
+        .insight-box.coin-flip-warning {
+            background: rgba(255, 159, 67, 0.15);
+            border-left-color: var(--coin-flip);
+        }
+        
+        .insight-box p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        
+        .insight-box strong {
+            color: var(--text-primary);
+        }
+        
+        .coin-flip-icon {
+            display: inline-block;
+            margin-right: 0.25rem;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        
+        footer a {
+            color: var(--accent-teal);
+            text-decoration: none;
+        }
+        
+        /* Petal animations */
+        .petal {
+            transition: opacity 0.3s;
+        }
+        
+        .petal:hover {
+            opacity: 0.8;
+        }
+        
+        /* Wedge labels */
+        .wedge-label {
+            font-size: 11px;
+            font-weight: 600;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="https://verawilde.github.io/rarity-roulette/" class="back-link">← Back to Rarity Roulette</a>
+            <h1>Policy <span>Simulator</span></h1>
+            <p class="subtitle">What happens when you screen a population year after year? Watch the outcomes accumulate — and notice how PPV stays stuck below the coin-flip line.</p>
+        </header>
+        
+        <div class="main-grid">
+            <div class="controls-panel">
+                <h2>Screening Parameters</h2>
+                
+                <div class="control-group">
+                    <label>Population screened per year</label>
+                    <input type="range" id="population" min="1000" max="100000" value="10000" step="1000">
+                    <span class="control-value" id="population-value">10,000</span>
+                </div>
+                
+                <div class="control-group">
+                    <label>Base rate (1 in X have the condition)</label>
+                    <input type="range" id="baserate" min="100" max="100000" value="10000" step="100">
+                    <span class="control-value" id="baserate-value">1 in 10,000 (0.01%)</span>
+                </div>
+                
+                <div class="control-group">
+                    <label>Test sensitivity (true positive rate)</label>
+                    <input type="range" id="sensitivity" min="50" max="99" value="80">
+                    <span class="control-value" id="sensitivity-value">80%</span>
+                </div>
+                
+                <div class="control-group">
+                    <label>Test specificity (true negative rate)</label>
+                    <input type="range" id="specificity" min="90" max="99.9" value="95" step="0.1">
+                    <span class="control-value" id="specificity-value">95%</span>
+                </div>
+                
+                <div class="control-group">
+                    <label>Years of screening</label>
+                    <input type="range" id="years" min="1" max="20" value="5">
+                    <div class="years-display">
+                        <span class="control-value" id="years-value">5 years</span>
+                        <span class="year-badge" id="current-year">Year 0</span>
+                    </div>
+                </div>
+                
+                <div class="btn-group">
+                    <button class="btn-primary" id="animate-btn">▶ Animate</button>
+                    <button class="btn-secondary" id="reset-btn">Reset</button>
+                </div>
+            </div>
+            
+            <div class="visualization-panel">
+                <div class="viz-header">
+                    <h2>Cumulative Screening Outcomes</h2>
+                    <div class="legend">
+                        <div class="legend-item">
+                            <span class="legend-dot fp"></span>
+                            False Positives
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot tp"></span>
+                            True Positives
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot fn"></span>
+                            False Negatives
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="rose-chart"></div>
+                
+                <!-- PPV Meter with Coin Flip Line -->
+                <div class="ppv-meter">
+                    <div class="ppv-header">
+                        <span class="ppv-label">Positive Predictive Value (PPV)</span>
+                        <span class="ppv-value good" id="ppv-value">—%</span>
+                    </div>
+                    <div class="ppv-bar-container">
+                        <div class="coin-flip-line"></div>
+                        <div class="coin-flip-label">50% — coin flip</div>
+                        <div class="ppv-marker" id="ppv-marker" style="left: 50%"></div>
+                    </div>
+                    <div class="ppv-endpoints">
+                        <span>0% (all false)</span>
+                        <span>100% (all true)</span>
+                    </div>
+                </div>
+                
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-value fp" id="stat-fp">0</div>
+                        <div class="stat-label">False Positives<br>(wrongly flagged)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value tp" id="stat-tp">0</div>
+                        <div class="stat-label">True Positives<br>(correctly caught)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value fn" id="stat-fn">0</div>
+                        <div class="stat-label">False Negatives<br>(missed)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value ratio" id="stat-ratio">—:1</div>
+                        <div class="stat-label">FP per TP<br>(harm per catch)</div>
+                    </div>
+                </div>
+                
+                <div class="insight-box" id="insight-box">
+                    <p id="insight-text">Adjust parameters and click <strong>Animate</strong> to see how screening outcomes accumulate over time.</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Part of the <a href="https://verawilde.github.io/rarity-roulette/">Rarity Roulette</a> project | 
+            <a href="https://wildetruth.substack.com/p/rarity-roulette">Learn more</a></p>
+        </footer>
+    </div>
+    
+    <script>
+        // State
+        let currentYear = 0;
+        let animationId = null;
+        let yearlyData = [];
+        let maxValues = { fp: 0, tp: 0, fn: 0 };
+        
+        // DOM elements
+        const populationSlider = document.getElementById('population');
+        const baserateSlider = document.getElementById('baserate');
+        const sensitivitySlider = document.getElementById('sensitivity');
+        const specificitySlider = document.getElementById('specificity');
+        const yearsSlider = document.getElementById('years');
+        
+        const populationValue = document.getElementById('population-value');
+        const baserateValue = document.getElementById('baserate-value');
+        const sensitivityValue = document.getElementById('sensitivity-value');
+        const specificityValue = document.getElementById('specificity-value');
+        const yearsValue = document.getElementById('years-value');
+        const currentYearBadge = document.getElementById('current-year');
+        
+        const animateBtn = document.getElementById('animate-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        
+        // Format numbers with commas
+        function formatNumber(num) {
+            if (num < 1 && num > 0) return num.toFixed(2);
+            return Math.round(num).toLocaleString();
+        }
+        
+        // Update slider display values
+        function updateDisplays() {
+            populationValue.textContent = formatNumber(populationSlider.value);
+            const br = parseInt(baserateSlider.value);
+            const pct = (100 / br).toFixed(br >= 1000 ? 4 : 2);
+            baserateValue.textContent = `1 in ${formatNumber(br)} (${pct}%)`;
+            sensitivityValue.textContent = sensitivitySlider.value + '%';
+            specificityValue.textContent = specificitySlider.value + '%';
+            yearsValue.textContent = yearsSlider.value + ' years';
+        }
+        
+        // Calculate outcomes for one year
+        function calculateYear(population, baseRate, sensitivity, specificity) {
+            const prevalence = 1 / baseRate;
+            const withCondition = population * prevalence;
+            const withoutCondition = population * (1 - prevalence);
+            
+            const truePositives = withCondition * (sensitivity / 100);
+            const falseNegatives = withCondition * (1 - sensitivity / 100);
+            const trueNegatives = withoutCondition * (specificity / 100);
+            const falsePositives = withoutCondition * (1 - specificity / 100);
+            
+            return {
+                tp: truePositives,
+                fp: falsePositives,
+                tn: trueNegatives,
+                fn: falseNegatives
+            };
+        }
+        
+        // Generate data for all years
+        function generateData() {
+            const population = parseInt(populationSlider.value);
+            const baseRate = parseInt(baserateSlider.value);
+            const sensitivity = parseFloat(sensitivitySlider.value);
+            const specificity = parseFloat(specificitySlider.value);
+            const years = parseInt(yearsSlider.value);
+            
+            yearlyData = [];
+            let cumTP = 0, cumFP = 0, cumFN = 0;
+            
+            for (let y = 1; y <= years; y++) {
+                const outcomes = calculateYear(population, baseRate, sensitivity, specificity);
+                cumTP += outcomes.tp;
+                cumFP += outcomes.fp;
+                cumFN += outcomes.fn;
+                
+                const ppv = (cumTP + cumFP) > 0 ? (cumTP / (cumTP + cumFP)) * 100 : 0;
+                
+                yearlyData.push({
+                    year: y,
+                    tp: cumTP,
+                    fp: cumFP,
+                    fn: cumFN,
+                    ppv: ppv,
+                    yearlyTP: outcomes.tp,
+                    yearlyFP: outcomes.fp,
+                    yearlyFN: outcomes.fn
+                });
+            }
+            
+            // Store max values from final year for consistent scaling
+            const finalYear = yearlyData[yearlyData.length - 1];
+            maxValues = {
+                fp: finalYear.fp,
+                tp: finalYear.tp,
+                fn: finalYear.fn
+            };
+            
+            return yearlyData;
+        }
+        
+        // D3 Rose Chart
+        const chartContainer = document.getElementById('rose-chart');
+        const width = 420;
+        const height = 420;
+        const innerRadius = 45;
+        const outerRadius = Math.min(width, height) / 2 - 25;
+        
+        const svg = d3.select('#rose-chart')
+            .append('svg')
+            .attr('viewBox', `0 0 ${width} ${height}`)
+            .attr('preserveAspectRatio', 'xMidYMid meet')
+            .append('g')
+            .attr('transform', `translate(${width/2}, ${height/2})`);
+        
+        // Background circle for context
+        svg.append('circle')
+            .attr('r', outerRadius)
+            .attr('fill', 'none')
+            .attr('stroke', 'rgba(255,255,255,0.05)')
+            .attr('stroke-width', 1);
+        
+        // Petal groups - order matters for layering
+        const fnGroup = svg.append('g').attr('class', 'fn-petals');
+        const tpGroup = svg.append('g').attr('class', 'tp-petals');
+        const fpGroup = svg.append('g').attr('class', 'fp-petals');
+        
+        // Center group (on top)
+        const centerGroup = svg.append('g').attr('class', 'center-group');
+        
+        centerGroup.append('circle')
+            .attr('r', innerRadius)
+            .attr('fill', '#0a0f14');
+        
+        const centerText = centerGroup.append('text')
+            .attr('text-anchor', 'middle')
+            .attr('dy', '0.35em')
+            .attr('font-size', '18px')
+            .attr('font-weight', '600')
+            .attr('fill', '#e8eaed')
+            .attr('font-family', "'Source Serif 4', Georgia, serif")
+            .text('Year 0');
+        
+        // Helper to position labels on arcs
+        function getLabelPosition(angle, radius) {
+            return {
+                x: Math.sin(angle) * radius,
+                y: -Math.cos(angle) * radius
+            };
+        }
+        
+        // Draw chart for a specific year
+        function drawChart(yearIndex) {
+            if (yearIndex < 0 || yearIndex >= yearlyData.length) return;
+            
+            const data = yearlyData[yearIndex];
+            const yearProgress = (yearIndex + 1) / yearlyData.length;
+            
+            // Each category gets its own scale based on its max
+            // This ensures all three wedges are visible and grow proportionally
+            const fpScale = d3.scaleLinear()
+                .domain([0, maxValues.fp])
+                .range([innerRadius, outerRadius]);
+            
+            const tpScale = d3.scaleLinear()
+                .domain([0, maxValues.tp])
+                .range([innerRadius, outerRadius * 0.85]);
+            
+            const fnScale = d3.scaleLinear()
+                .domain([0, maxValues.fn])
+                .range([innerRadius, outerRadius * 0.7]);
+            
+            // Clear previous
+            fpGroup.selectAll('*').remove();
+            tpGroup.selectAll('*').remove();
+            fnGroup.selectAll('*').remove();
+            
+            // === FALSE POSITIVES (Red) - Top, largest arc ===
+            const fpRadius = fpScale(data.fp);
+            const fpStartAngle = -Math.PI * 0.4;
+            const fpEndAngle = Math.PI * 0.4;
+            
+            const fpArc = d3.arc()
+                .innerRadius(innerRadius)
+                .outerRadius(fpRadius)
+                .startAngle(fpStartAngle)
+                .endAngle(fpEndAngle)
+                .cornerRadius(4);
+            
+            fpGroup.append('path')
+                .attr('class', 'petal')
+                .attr('d', fpArc)
+                .attr('fill', '#ff6b6b')
+                .attr('opacity', 0.9);
+            
+            // FP label
+            if (fpRadius > innerRadius + 25) {
+                const fpLabelPos = getLabelPosition(0, innerRadius + (fpRadius - innerRadius) * 0.5);
+                fpGroup.append('text')
+                    .attr('class', 'wedge-label')
+                    .attr('x', fpLabelPos.x)
+                    .attr('y', fpLabelPos.y)
+                    .attr('text-anchor', 'middle')
+                    .attr('dominant-baseline', 'middle')
+                    .attr('fill', 'white')
+                    .text(formatNumber(data.fp));
+            }
+            
+            // === TRUE POSITIVES (Teal) - Bottom right ===
+            const tpRadius = tpScale(data.tp);
+            const tpStartAngle = Math.PI * 0.5;
+            const tpEndAngle = Math.PI * 0.9;
+            
+            const tpArc = d3.arc()
+                .innerRadius(innerRadius)
+                .outerRadius(tpRadius)
+                .startAngle(tpStartAngle)
+                .endAngle(tpEndAngle)
+                .cornerRadius(4);
+            
+            tpGroup.append('path')
+                .attr('class', 'petal')
+                .attr('d', tpArc)
+                .attr('fill', '#4ecdc4')
+                .attr('opacity', 0.9);
+            
+            // TP label
+            if (tpRadius > innerRadius + 20) {
+                const tpMidAngle = (tpStartAngle + tpEndAngle) / 2;
+                const tpLabelPos = getLabelPosition(tpMidAngle, innerRadius + (tpRadius - innerRadius) * 0.55);
+                tpGroup.append('text')
+                    .attr('class', 'wedge-label')
+                    .attr('x', tpLabelPos.x)
+                    .attr('y', tpLabelPos.y)
+                    .attr('text-anchor', 'middle')
+                    .attr('dominant-baseline', 'middle')
+                    .attr('fill', 'white')
+                    .text(formatNumber(data.tp));
+            }
+            
+            // === FALSE NEGATIVES (Gold) - Bottom left ===
+            const fnRadius = fnScale(data.fn);
+            const fnStartAngle = -Math.PI * 0.9;
+            const fnEndAngle = -Math.PI * 0.5;
+            
+            const fnArc = d3.arc()
+                .innerRadius(innerRadius)
+                .outerRadius(fnRadius)
+                .startAngle(fnStartAngle)
+                .endAngle(fnEndAngle)
+                .cornerRadius(4);
+            
+            fnGroup.append('path')
+                .attr('class', 'petal')
+                .attr('d', fnArc)
+                .attr('fill', '#ffd93d')
+                .attr('opacity', 0.9);
+            
+            // FN label
+            if (fnRadius > innerRadius + 20) {
+                const fnMidAngle = (fnStartAngle + fnEndAngle) / 2;
+                const fnLabelPos = getLabelPosition(fnMidAngle, innerRadius + (fnRadius - innerRadius) * 0.55);
+                fnGroup.append('text')
+                    .attr('class', 'wedge-label')
+                    .attr('x', fnLabelPos.x)
+                    .attr('y', fnLabelPos.y)
+                    .attr('text-anchor', 'middle')
+                    .attr('dominant-baseline', 'middle')
+                    .attr('fill', '#1a1a1a')
+                    .text(formatNumber(data.fn));
+            }
+            
+            // Update center text
+            centerText.text(`Year ${data.year}`);
+            currentYearBadge.textContent = `Year ${data.year}`;
+            
+            // Update stats
+            document.getElementById('stat-fp').textContent = formatNumber(data.fp);
+            document.getElementById('stat-tp').textContent = formatNumber(data.tp);
+            document.getElementById('stat-fn').textContent = formatNumber(data.fn);
+            
+            const ratio = data.tp > 0.001 ? Math.round(data.fp / data.tp) : '∞';
+            document.getElementById('stat-ratio').textContent = `${ratio}:1`;
+            
+            // Update PPV meter
+            updatePPV(data.ppv);
+            
+            // Update insight
+            updateInsight(data);
+        }
+        
+        function updatePPV(ppv) {
+            const ppvEl = document.getElementById('ppv-value');
+            const markerEl = document.getElementById('ppv-marker');
+            
+            ppvEl.textContent = ppv.toFixed(1) + '%';
+            markerEl.style.left = Math.max(0, Math.min(100, ppv)) + '%';
+            
+            // Color based on threshold
+            ppvEl.classList.remove('good', 'coin-flip', 'bad');
+            if (ppv >= 60) {
+                ppvEl.classList.add('good');
+            } else if (ppv >= 40) {
+                ppvEl.classList.add('coin-flip');
+            } else {
+                ppvEl.classList.add('bad');
+            }
+        }
+        
+        function updateInsight(data) {
+            const ratio = data.tp > 0.001 ? Math.round(data.fp / data.tp) : Infinity;
+            const insightEl = document.getElementById('insight-text');
+            const insightBox = document.getElementById('insight-box');
+            
+            const belowCoinFlip = data.ppv < 50;
+            
+            insightBox.classList.toggle('coin-flip-warning', belowCoinFlip);
+            
+            if (belowCoinFlip) {
+                const coinIcon = '<span class="coin-flip-icon">🪙</span>';
+                if (data.year === 1) {
+                    insightEl.innerHTML = `${coinIcon}<strong>Year 1: Worse than a coin flip.</strong> PPV is ${data.ppv.toFixed(1)}% — a positive result is more likely wrong than right. For every true case caught, <strong>${ratio} innocent people</strong> are flagged.`;
+                } else {
+                    insightEl.innerHTML = `${coinIcon}<strong>Year ${data.year}: Still worse than a coin flip.</strong> After ${data.year} years, <strong>${formatNumber(data.fp)} people</strong> have been wrongly flagged to catch <strong>${formatNumber(data.tp)}</strong> true cases. PPV remains at ${data.ppv.toFixed(1)}%.`;
+                }
+            } else {
+                if (data.year === 1) {
+                    insightEl.innerHTML = `<strong>Year 1:</strong> For every person correctly identified, <strong>${ratio} innocent people</strong> are wrongly flagged. PPV: ${data.ppv.toFixed(1)}%.`;
+                } else {
+                    insightEl.innerHTML = `<strong>After ${data.year} years:</strong> <strong>${formatNumber(data.fp)} false positives</strong> have accumulated to catch <strong>${formatNumber(data.tp)}</strong> true cases. That's <strong>${ratio} wrongly flagged for every 1 correctly identified</strong>.`;
+                }
+            }
+        }
+        
+        // Animation
+        function animate() {
+            if (animationId) {
+                clearTimeout(animationId);
+                animationId = null;
+                animateBtn.textContent = '▶ Animate';
+                return;
+            }
+            
+            generateData();
+            currentYear = 0;
+            animateBtn.textContent = '⏸ Pause';
+            
+            function step() {
+                if (currentYear < yearlyData.length) {
+                    drawChart(currentYear);
+                    currentYear++;
+                    animationId = setTimeout(step, 700);
+                } else {
+                    animationId = null;
+                    animateBtn.textContent = '▶ Animate';
+                }
+            }
+            
+            step();
+        }
+        
+        function reset() {
+            if (animationId) {
+                clearTimeout(animationId);
+                animationId = null;
+            }
+            currentYear = 0;
+            animateBtn.textContent = '▶ Animate';
+            currentYearBadge.textContent = 'Year 0';
+            centerText.text('Year 0');
+            
+            fpGroup.selectAll('*').remove();
+            tpGroup.selectAll('*').remove();
+            fnGroup.selectAll('*').remove();
+            
+            document.getElementById('stat-fp').textContent = '0';
+            document.getElementById('stat-tp').textContent = '0';
+            document.getElementById('stat-fn').textContent = '0';
+            document.getElementById('stat-ratio').textContent = '—:1';
+            document.getElementById('ppv-value').textContent = '—%';
+            document.getElementById('ppv-value').classList.remove('good', 'coin-flip', 'bad');
+            document.getElementById('ppv-marker').style.left = '50%';
+            document.getElementById('insight-text').innerHTML = 'Adjust parameters and click <strong>Animate</strong> to see how screening outcomes accumulate over time.';
+            document.getElementById('insight-box').classList.remove('coin-flip-warning');
+        }
+        
+        // Event listeners
+        [populationSlider, baserateSlider, sensitivitySlider, specificitySlider, yearsSlider].forEach(slider => {
+            slider.addEventListener('input', () => {
+                updateDisplays();
+                reset();
+            });
+        });
+        
+        animateBtn.addEventListener('click', animate);
+        resetBtn.addEventListener('click', reset);
+        
+        // Initialize
+        updateDisplays();
+    </script>
+</body>
+</html>
