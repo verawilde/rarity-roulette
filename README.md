@@ -1,2 +1,2 @@
 # bayes-screening-simulator
-A tool to visualize the dangers of mass screening for low-prevalence problems.
+A tool to visualize the hypothetical estimated outcomes of mass screenings for low-prevalence problems.
