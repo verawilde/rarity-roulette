@@ -108,6 +108,7 @@
                         <option value="mammography">Harding Center, Mammography Screening (2021)</option>
                         <option value="psa">Harding Center, PSA Testing (2020)</option>
                         <option value="prenatal">Young-Saver/NYT, Prenatal Testing - DiGeorge Syndrome (2022)</option>
+                        <option value="aml">Bank Policy Institute, AML Transaction Monitoring (2020)</option>
                     </select>
                 </div>
                 
@@ -217,8 +218,9 @@
                             <li><a href="https://www.hardingcenter.de/en/transfer-and-impact/fact-boxes/early-detection-of-cancer/early-detection-of-breast-cancer-by-mammography-screening" target="_blank">Harding Center for Risk Literacy, "Early Detection of Breast Cancer by Mammography Screening" (updated April 2021)</a> - Clear presentation of trade-offs in population-wide breast cancer screening</li>
                             <li><a href="https://www.hardingcenter.de/en/transfer-and-impact/fact-boxes/early-detection-of-cancer/early-detection-of-prostate-cancer-with-psa-testing" target="_blank">Harding Center for Risk Literacy, "Early Detection of Prostate Cancer with PSA Testing" (updated November 2020)</a> - Example of screening trade-offs for Prostate-Specific Antigen testing</li>
                             <li><a href="https://www.nytimes.com/2022/02/10/learning/lesson-plans/the-misleading-math-of-prenatal-tests.html" target="_blank">Dashiell Young-Saver, "The Misleading Math of Prenatal Tests," New York Times (Feb. 10, 2022)</a> - Analysis of false positives in prenatal genetic screening</li>
+                            <li><a href="https://bpi.com/the-truth-about-suspicious-activity-reports/" target="_blank">Bank Policy Institute, "The Truth About Suspicious Activity Reports" (Nov. 2020)</a> - In 2017, large banks reviewed ~16 million alerts and filed 640,000+ SARs, of which a median of only 4% drew any law-enforcement follow-up, implying 90-95% of reported individuals were likely innocent. See also Lannoo &amp; Parlour, <a href="https://ssrn.com/abstract=3805607" target="_blank">"Anti-Money Laundering in the EU: Time to Get Serious"</a> (CEPS-ECRI Task Force Report, Jan. 2021)</li>
                         </ul>
-                        <p><strong>Note:</strong> The mammography and PSA examples use parameters extrapolated from the Harding Center's long-term screening data to match their published false-alarm rates. The Harding fact boxes provide more comprehensive outcomes (e.g., mortality, overdiagnosis, quality-of-life effects), whereas this tool focuses solely on test-classification accuracy. The purpose is illustrative, not a substitute for full cohort data.</p>
+                        <p><strong>Note:</strong> The mammography and PSA examples use parameters extrapolated from the Harding Center's long-term screening data to match their published false-alarm rates. The Harding fact boxes provide more comprehensive outcomes (e.g., mortality, overdiagnosis, quality-of-life effects), whereas this tool focuses solely on test-classification accuracy. The AML example mirrors the worked illustration in <a href="https://wildetruth.substack.com/" target="_blank">"Fair Game"</a>: with generous "billboard" accuracy (95% sensitivity, 95% specificity) and a 1-in-5,000 base rate, the positive predictive value collapses to ~0.4% (roughly 263 false alarms per genuine hit). The generous inputs make this conservative rather than a strawman&mdash;documented industry alert false-positive rates run north of 90% (BPI 2020; Lannoo &amp; Parlour 2021). The purpose is illustrative, not a substitute for full cohort data.</p>
                     </div>
                     
                     <div class="info-section">
@@ -292,7 +294,8 @@
                 polygraph_friendly: { population: 10000, baseRate: 1000, accuracy: 20, falsePositiveRate: 0.39 },
                 mammography: { population: 1000, baseRate: 200, accuracy: 90, falsePositiveRate: 10.05 },
                 psa: { population: 1000, baseRate: 40, accuracy: 85, falsePositiveRate: 15.897 },
-                prenatal: { population: 100000, baseRate: 4000, accuracy: 99.9, falsePositiveRate: 0.1 }
+                prenatal: { population: 100000, baseRate: 4000, accuracy: 99.9, falsePositiveRate: 0.1 },
+                aml: { population: 1000000, baseRate: 5000, accuracy: 95, falsePositiveRate: 5 }
             };
             if (scenario && scenarios[scenario]) {
                 const s = scenarios[scenario];
